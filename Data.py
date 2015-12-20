@@ -54,7 +54,7 @@ class dataset:
 			username = "_".join([prefix, username])
 		else:
 			username = "_".join([prefix, loc])
-		username = username + "6"
+		username = username
 		return username
 		
 		 

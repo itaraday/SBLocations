@@ -23,16 +23,19 @@ class SBAdmin():
 		self.crawler.pageClick("xpath", '//span[@accesscontrolledunitid="ReportCustom"]/input')
 		self.crawler.pageLoad('id', 'buttonSubmit')
 				
+	def adminSummary(self, loc):
+		self.crawler.inputData("id", 'textFirstName', self.crawler.getAttributeOne(loc, "First Name Administrator"))
+		self.crawler.inputData("id", 'textLastName', self.crawler.getAttributeOne(loc, "Last Name Administrator"))
+		self.crawler.inputData("id", 'textRegion', loc)
+		self.crawler.inputData("id", 'contactInfoControl_txtEmailAddress', self.crawler.getAttributeOne(loc, "Email Administrator"))		
+	
 	def newAdmin(self, loc, event):
 		self.crawler.pageLoad("id","linkCreateAdministrator" )
 		username = self.crawler.makeAdminName(loc, "Admin")
 		self.crawler.inputData("id", 'textUsername', username)
 		self.crawler.inputData("id", 'textPassword', self.tempPassword)
 		self.crawler.inputData("id", 'textConfirmPassword', self.tempPassword)
-		self.crawler.inputData("id", 'textFirstName', self.crawler.getAttributeOne(loc, "First Name Administrator"))
-		self.crawler.inputData("id", 'textLastName', self.crawler.getAttributeOne(loc, "Last Name Administrator"))
-		self.crawler.inputData("id", 'textRegion', loc)
-		self.crawler.inputData("id", 'contactInfoControl_txtEmailAddress', self.crawler.getAttributeOne(loc, "Email Administrator"))
+		self.adminSummary(loc)
 		
 		self.crawler.pageLoad("id","buttonContinue" )
 		self.crawler.pageLoad("id","linkbuttonTabs" )
@@ -44,22 +47,31 @@ class SBAdmin():
 		self.crawler.pageLoad("id","buttonSubmit")
 		self.crawler.setAttribute(loc, "Artez Admin Username", username)
 		self.crawler.setAttribute(loc, "Artez Password", self.tempPassword)
-		
+	
+	def oldAdmin(self, loc, event):
+		print "old admin"
+ 	
 	def setupAdmin(self, event):
 		self.crawler.pageLoad("id","ucBodyHead_hyperlinkConfigurationTab" )
 		self.crawler.getOldNames('ucBodyHead_hyperlinkConfigurationTab', 2)
 		
 		for loc in self.crawler.getLocations():
 			name = self.crawler.getAttributeOne(loc, "old name")
-			print name
 			try:
 				self.crawler.pageLoad("xpath",'//td[contains(text(),"'+name+'")]/preceding-sibling::td[2]//a')
 			except:
-				print "new admin {}".format(loc)
 				self.newAdmin(loc, event)
 			else:
-				print "oldAdmin: {}".format(loc)
+				self.oldAdmin(loc, event)
 				self.crawler.pageLoad("id","buttonCancel")
+				self.crawler.pageLoad("xpath",'//td[contains(text(),"'+name+'")]/preceding-sibling::td[2]//a')
+				self.adminSummary(loc)
+				username = self.crawler.getText("xpath", '//td[@id="tdUsernameLiteral"]/strong')
+				self.crawler.setAttribute(loc, "Artez Admin Username", username)
+				self.crawler.setAttribute(loc, "Artez Password", self.tempPassword)
+				self.crawler.pageLoad("id","buttonSubmit")
+				
+				#self.crawler.pageLoad("id","buttonCancel")
 				
 			   
 

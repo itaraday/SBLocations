@@ -100,6 +100,10 @@ class crawler:
 	def setAttribute(self, loc, name, value):
 		self.maindata.setAttribute(loc, name, value)
 
+	def getText(self, mytype, element):
+		if mytype == 'xpath':
+			return self.browser.find_element_by_xpath(element).text
+	
 	def clickCheckboxes(self, mytype, element, check):
 		if mytype == 'xpath':
 			checkboxes = self.browser.find_elements_by_xpath(element)
