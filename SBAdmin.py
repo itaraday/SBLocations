@@ -49,8 +49,18 @@ class SBAdmin():
 		self.crawler.setAttribute(loc, "Artez Password", self.tempPassword)
 	
 	def oldAdmin(self, loc, event):
-		print "old admin"
- 	
+		self.crawler.inputData("id", 'textUpdatePassword', self.tempPassword)
+		self.crawler.inputData("id", 'textConfirmUpdatePassword', self.tempPassword)
+		self.crawler.pageLoad("id","btnUpdatePassword")
+		self.crawler.pageLoad("xpath",'//li[@id="ucMenu_LiteralLiOpen_ConfigAdminsAccessSummary"]/a')
+		
+		self.crawler.pageLoad("id","linkbuttonTabs" )
+		self.cleanPermission()
+		self.crawler.pageLoad("id","linkbuttonEvents" )
+		self.rightLocations(loc, event)	
+		self.crawler.pageLoad("id","buttonSubmit")
+		self.crawler.pageLoad("id","buttonSubmit")
+
 	def setupAdmin(self, event):
 		self.crawler.pageLoad("id","ucBodyHead_hyperlinkConfigurationTab" )
 		self.crawler.getOldNames('ucBodyHead_hyperlinkConfigurationTab', 2)
