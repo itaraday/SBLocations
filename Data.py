@@ -38,13 +38,13 @@ class dataset:
 	def save(self, filepath):
 		self.df.to_csv(filepath, encoding='mbcs') 
 		 
-	def getLocations(self, returningStatus="all"):
+	def getLocations(self, returningStatus="all", myName = "Charity's Name"):
 		if returningStatus == "new":
-			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == True), "Charity's Name"] 
+			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == True), myName] 
 		elif returningStatus == "returning":
-			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == False), "Charity's Name"] 
+			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == False), myName] 
 		else:
-			return self.df.loc[self.df["Charity added by"].isnull(), "Charity's Name"]
+			return self.df.loc[self.df["Charity added by"].isnull(), myName]
 	
 	#if charity name is one word the name is prefix_charity
 	#if charity name is mulitple words take first character from each word 
@@ -57,7 +57,9 @@ class dataset:
 		username = username
 		return username
 		
-		 
+	def resetOld(self):
+		self.df["old name"] = self.df["Charity's Name"]
+	 
 	def setAttribute(self, name, attribute, val):
 		self.df.loc[self.df["Charity's Name"] == name, attribute] = val
 		

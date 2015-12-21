@@ -54,7 +54,7 @@ def setupLocs(crawler, name, buttons = None):
     elif name == 'Admin':
         crawler.setupAdmin()
     elif name == 'Tax':
-        print name
+        crawler.setupTR()
     elif name == 'Pages':
         print name
     elif name == 'Email':

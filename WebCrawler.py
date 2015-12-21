@@ -5,6 +5,7 @@ Created on Dec 15, 2015
 '''
 from SBLocations import SBLocations 
 from SBAdmin import SBAdmin 
+from SBTax import SBTax 
 from contextlib import contextmanager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -33,6 +34,7 @@ class crawler:
 		self.browser = webdriver.Firefox()
 		self.SBLocations = SBLocations(self)
 		self.SBAdmin = SBAdmin(self)
+		self.SBTax = SBTax(self)
 		
 	#Helper functions
 	def inputData(self, mytype, element, text):
@@ -59,13 +61,14 @@ class crawler:
 	def makeAdminName(self, loc, prefix):
 		return self.maindata.makeAdminName(loc, prefix)	 
 		
-	def getOldNames(self, table, eq):
+	def getOldNames(self, table, eq, myName = "Charity's Name"):
+		self.maindata.resetOld()
 		elem = self.browser.find_element_by_id(table)
 		soup = BeautifulSoup(elem.get_attribute('innerHTML'), "lxml")
 		locations = []
 		for row in soup.find_all('tr'):
 			locations.append(row.find_all('td')[eq].get_text())
-		for loc in self.maindata.getLocations():
+		for loc in self.maindata.getLocations(myName = myName):
 			oldratio = 70
 			ratio = 0
 			myloc = ""
@@ -133,5 +136,8 @@ class crawler:
 					  
 	def setupAdmin(self):
 		self.SBAdmin.setupAdmin(self.event)
+	
+	def setupTR(self):
+		self.SBTax.setupTR()
 		
 	
