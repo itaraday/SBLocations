@@ -46,6 +46,13 @@ class crawler:
 			elem = ""			
 		elem.clear()   
 		elem.send_keys(text) 
+	
+	def clear(self, mytype, element):
+		if mytype == 'id':
+			elem = self.browser.find_element_by_id(element)
+		elif mytype == "name":
+			elem = self.browser.find_element_by_name(element)	
+		elem.clear()	
 		
 	def wait(self, amount):
 		self.browser.implicitly_wait(amount)
@@ -58,13 +65,30 @@ class crawler:
 		if mytype == 'id':
 			Select(self.browser.find_element_by_id(element)).select_by_visible_text(value)
 	
+	def fineElement(self, mytype, element):
+		found = True
+		try:
+			if mytype == 'id':
+				self.browser.find_element_by_id(element)
+			if mytype == 'xpath':
+				self.browser.find_element_by_xpath(element)
+		except:
+			found = False
+		return found
+		
 	def makeAdminName(self, loc, prefix):
 		return self.maindata.makeAdminName(loc, prefix)	 
 		
+	def getElemAttribute(self, mytype, element, attr):
+		if mytype == 'xpath':
+			return self.browser.find_element_by_xpath(element).get_attribute(attr)	
+		elif mytype == 'id':
+			return self.browser.find_element_by_id(element).get_attribute(attr)
+			
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
 		self.maindata.resetOld()
-		elem = self.browser.find_element_by_id(table)
-		soup = BeautifulSoup(elem.get_attribute('innerHTML'), "lxml")
+		elem = self.getElemAttribute("id", table, 'innerHTML')
+		soup = BeautifulSoup(elem, "lxml")
 		locations = []
 		for row in soup.find_all('tr'):
 			locations.append(row.find_all('td')[eq].get_text())
@@ -106,7 +130,7 @@ class crawler:
 	def getText(self, mytype, element):
 		if mytype == 'xpath':
 			return self.browser.find_element_by_xpath(element).text
-	
+		
 	def clickCheckboxes(self, mytype, element, check):
 		if mytype == 'xpath':
 			checkboxes = self.browser.find_elements_by_xpath(element)
