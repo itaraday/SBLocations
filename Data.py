@@ -37,7 +37,7 @@ class dataset:
 	
 	def save(self, filepath):
 		self.df.to_csv(filepath, encoding='mbcs') 
-		 
+		
 	def getLocations(self, returningStatus="all", myName = "Charity's Name"):
 		if returningStatus == "new":
 			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == True), myName] 
@@ -59,7 +59,7 @@ class dataset:
 		
 	def resetOld(self):
 		self.df["old name"] = self.df["Charity's Name"]
-	 
+	
 	def setAttribute(self, name, attribute, val):
 		self.df.loc[self.df["Charity's Name"] == name, attribute] = val
 		

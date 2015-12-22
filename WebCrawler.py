@@ -15,11 +15,9 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 from selenium.webdriver.common.keys import Keys
 from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
+import json
 
-def getOrgs():
-	return ['ps', 'Scotiabank', 'Bluenose', 'SCCO', 'misscharitychallenge']
-
-		
+	
 @contextmanager
 def wait_for_page_load(self, timeout=60):
 	old_page = self.find_element_by_tag_name('html')
@@ -35,7 +33,12 @@ class crawler:
 		self.SBLocations = SBLocations(self)
 		self.SBAdmin = SBAdmin(self)
 		self.SBTax = SBTax(self)
-		
+		with open('eventData.json') as data_file:
+			self.eventData = json.load(data_file) 
+	
+	def getOrgs(self):
+		return self.eventData.keys()
+
 	#Helper functions
 	def inputData(self, mytype, element, text):
 		if mytype == 'id':
@@ -116,7 +119,7 @@ class crawler:
 
 	def quit(self):
 		self.browser.close()
-   
+		
 	def pageClick(self, mytype, clickTo):
 		if mytype == "id":
 			self.browser.find_element_by_id(clickTo).click()
@@ -154,10 +157,8 @@ class crawler:
 	#SBLocation main functions
 	def setup(self, maindata, username, password, org):
 		self.maindata = maindata
-		if org == 'Bluenose':
-			self.event = '2016 Scotiabank Charity Challenge at the Scotiabank Blue Nose Marathon'
-		elif org == 'Scotiabank' or org == 'ps':
-			self.event = '2016 Scotiabank Charity Challenge at the Scotiabank Calgary Marathon'
+		self.event = self.eventData[org]["new"]
+		self.eventOld = self.eventData[org]["old"]
 		#logging in
 		with wait_for_page_load(self.browser):
 			self.browser.get("https://admin.e2rm.com")

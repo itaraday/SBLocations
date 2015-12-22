@@ -67,12 +67,12 @@ def setupLocs(crawler, name, buttons = None):
        
 def main():   
     print "Starting!!"
-    myorgs = WebCrawler.getOrgs()
     root = Tk()
     filePath = tkFileDialog.askopenfilename(parent=root,title='Choose a file',filetypes=[('CSV files', '.csv')])
     if not len(filePath):
         quit()
     crawler = WebCrawler.crawler()  
+    myorgs = crawler.getOrgs()
     maindata = data.dataset(filePath)
     #removing the Tkinter logo by creating a temp blank icon file
     ICON = (b'\x00\x00\x01\x00\x01\x00\x10\x10\x00\x00\x01\x00\x08\x00h\x05\x00\x00'
