@@ -14,6 +14,28 @@ class SBLocations():
 		#go to locations
 		self.crawler.pageLoad("id","ucMenu_HyperLinkMenu_EventLocation" )		 
 
+	def enableTR(self, event):
+		self.goToLocations(event)
+		try:
+			self.crawler.pageLoad("id","buttonShowAll" )
+		except:
+			pass		
+		self.crawler.getOldNames('datagridLocations', 0)
+		for loc in self.crawler.getLocations():
+			if self.crawler.getAttributeOne(loc, "tax receipts"):
+				try:
+					self.crawler.pageLoad("id","buttonShowAll" )
+				except:
+					pass
+				self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 
+				self.crawler.pageLoad("xpath", '//li[@id="ucMenu_liEventLocationTax"]/a')
+				self.crawler.select("id", "dropDownListBundleName", self.crawler.getAttributeOne(loc, "TR name"))
+				self.crawler.pageLoad("id", "buttonSubmit")
+				self.goToLocations(event)
+				
+				
+		
+	
 	def LocationContent(self, loc, newimage):
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxLocationName', loc)
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxExportLocationID', loc)

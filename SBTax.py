@@ -1,25 +1,40 @@
 #from WebCrawler import crawler
 import pandas as pd
+import time
 
 class SBTax():
 
     def __init__(self, crawler):
         self.crawler = crawler
     
-    def showall(self):
+    def goToTaxReceipting(self):
+        self.crawler.pageLoad("id","ucBodyHead_hyperlinkConfigurationTab" )
+        self.crawler.pageLoad("xpath",'//li[@id="ucMenu_LiteralLiOpen_ConfigOrgTaxReceipting"]/a')
         try:
             self.crawler.pageLoad("id",'buttonShowAll')
         except:
             pass
-        
-    def goToTaxReceipting(self):
-        self.crawler.pageLoad("id","ucBodyHead_hyperlinkConfigurationTab" )
-        self.crawler.pageLoad("xpath",'//li[@id="ucMenu_LiteralLiOpen_ConfigOrgTaxReceipting"]/a')
-        self.showall()
     
+    def filOutBlocks(self, startBlock, endBlock):
+        self.crawler.pageClick("id", "linkBlockCreate")
+        self.crawler.inputData("id", 'textStarting', startBlock)
+        self.crawler.inputData("id", 'textEnding', endBlock)
+        self.crawler.pageClick("id", "buttonSubmit")
+    
+    def extendBlock(self, endBlock):
+        self.crawler.pageClick("xpath", '//table[@id="datagridBlocks"]//tr[last()]//a')
+        self.crawler.inputData("id", 'textEnding', endBlock)
+        self.crawler.pageClick("id", "buttonSubmit")
+        
+    def WTHDoIDO(self, loc):
+        startBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number Start")
+        endBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number end")
+        print "YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE!!!!"
+        print "Charity wants the range: {} to {}".format(startBlock, endBlock)
+        time.sleep(60)           
+        
     def setupTR(self):
         self.goToTaxReceipting()
-        print "setting up tax receipts"
         self.crawler.getOldNames('dataGridTaxReceiptBundles', 0, "Charity's Legal Name")
         
         for loc in self.crawler.getLocations():
@@ -28,8 +43,10 @@ class SBTax():
                 legalname = self.crawler.getAttributeOne(loc, "Charity's Legal Name")
                 found = self.crawler.fineElement("xpath", '//td[contains(text(),"'+oldname+'")]/following-sibling::td[2]//a')
                 #see if TR exists
+                newTR = False
                 if not found:
                     #setup TR, product bug when needing to make new TR it gives an error
+                    newTR = True
                     self.crawler.pageLoad("id","linkButtonSetupNewBundle")
                     self.crawler.pageLoad("id","hyperlinkEditInformation")
                     self.crawler.inputData("id", 'textboxTaxBundle', legalname)
@@ -38,8 +55,13 @@ class SBTax():
                     self.crawler.pageLoad("id","buttonSubmit")
                     self.goToTaxReceipting()
                 
+                
+                #tax receipt settings
                 self.crawler.pageLoad("xpath", '//td[contains(text(),"'+oldname+'")]/following-sibling::td[2]//a')
                 self.crawler.pageLoad("id","hyperlinkEditInformation")
+                
+                trname = self.crawler.getElemAttribute("id", 'textboxTaxBundle', 'value')
+                self.crawler.setAttribute(loc, "TR name", trname)
                 prefix = self.crawler.getAttributeOne(loc, "Tax Receipt Prefix")
                 if pd.isnull(prefix):
                     prefix = "" 
@@ -56,6 +78,77 @@ class SBTax():
                     self.crawler.pageClick("id", "checkLeadingZeros")
                 self.crawler.pageLoad("id","buttonSubmit")
                 
+                #tax receipt blocks
+                #get old blocks
+                oldBlocks = self.crawler.getTRBlocks('//table[@id="datagridBlocks"]//tr')
+                startBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number Start")
+                endBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number end")
                 
+                if not len(oldBlocks):
+                    if pd.isnull(startBlock):
+                        startBlock = 1
+                    if pd.isnull(endBlock):
+                        endBlock = startBlock + 1000 
+                    self.filOutBlocks(startBlock, endBlock)
+                elif len(oldBlocks) == 1:
+                    if pd.isnull(startBlock):
+                        startBlock = oldBlocks[0][0]
+                    else:
+                        startBlock = int(startBlock)
+                    if pd.isnull(endBlock):
+                        endBlock = oldBlocks[0][1]
+                    else:
+                        endBlock = int(endBlock)
+                    myrange = set(range(startBlock, endBlock))
+                    oldBlockRange = set(range(oldBlocks[0][0], oldBlocks[0][1]))
+                    intersect = myrange.intersection(oldBlockRange)
+                    #if no intersection
+                    if len(intersect) == 0:
+                        self.filOutBlocks(startBlock, endBlock)
+                    #if no change
+                    elif len(intersect) == len(myrange):
+                        pass
+                    #else there is a partial intersection
+                    #check if need to extend the end number
+                    elif endBlock >= oldBlocks[0][1]:
+                        self.extendBlock(endBlock)
+                    #check if need to make a new block before the intersection
+                    elif (endBlock >= oldBlocks[0][0]) and (endBlock <= oldBlocks[0][1]):
+                        self.filOutBlocks(startBlock, oldBlocks[0][0])
+                    else:
+                        self.WTHDoIDO(loc)
+                else:
+                    if not ((pd.isnull(startBlock)) and (pd.isnull(endBlock))):
+                        self.WTHDoIDO(loc)
+                    
+                #TR Template
+                try:
+                    self.crawler.pageClick("xpath", '//table[@id="datagridTemplates"]//tr[last()]//a')
+                except:
+                    self.crawler.pageLoad("id","linkTemplateCreate")
+                    newTR = True               
+                self.crawler.inputData("id", 'textName', legalname)
+                self.crawler.inputData("id", 'ucPDFTemplateBuilder_CharitableRegistrationNumber', self.crawler.getAttributeOne(loc, "Charitable Business/Registration Number"))
+                mylocation = self.crawler.getAttributeOne(loc, "city") + " Canada"
+                self.crawler.inputData("id", 'ucPDFTemplateBuilder_Location', mylocation)
+                #creating address label
+                a1 = legalname
+                a2 = self.crawler.getAttributeOne(loc, "address")
+                a3 = self.crawler.getAttributeOne(loc, "city") + " " + self.crawler.getAttributeOne(loc, "province") + " " + self.crawler.getAttributeOne(loc, "postal code")
+                a4 = "P. " + self.crawler.getAttributeOne(loc, "TRPhone") + " E. " + self.crawler.getAttributeOne(loc, "TREmail")
+                address = "\n".join([a1, a2, a3, a4])
+                self.crawler.inputData("id", 'ucPDFTemplateBuilder_AdditionalText', address)
                 
+                #check if need images
+                if newTR:
+                    print "YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR NEW CHARTITY: {}".format(loc)
+                    print "do NOT click submit"
+                    time.sleep(60)                                        
+                if self.crawler.getAttributeOne(loc, "newImage") or self.crawler.getAttributeOne(loc, "newSig"):
+                    print "YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR CHARTITY: {}".format(loc)
+                    print "New Image: {}".format(self.crawler.getAttributeOne(loc, "newImage"))
+                    print "New Sig: {}".format(self.crawler.getAttributeOne(loc, "newSig"))
+                    print "do NOT click submit"
+                    time.sleep(60)    
+                self.crawler.pageLoad("id","buttonSubmit")
                 self.goToTaxReceipting()

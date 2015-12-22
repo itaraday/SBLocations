@@ -85,6 +85,17 @@ class crawler:
 		elif mytype == 'id':
 			return self.browser.find_element_by_id(element).get_attribute(attr)
 			
+	def getTRBlocks(self, table):
+		TRows = self.browser.find_elements_by_xpath(table)
+		values = []
+		for tr in TRows[1:]:
+			low = int(tr.find_elements(By.TAG_NAME, "td")[0].text)
+			high = int(tr.find_elements(By.TAG_NAME, "td")[1].text)
+			status = tr.find_elements(By.TAG_NAME, "td")[3].text
+			values.append([low, high, status])
+		return values
+		
+	
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
 		self.maindata.resetOld()
 		elem = self.getElemAttribute("id", table, 'innerHTML')
@@ -157,11 +168,12 @@ class crawler:
 		
 	def setupLocations(self):	 
 		self.SBLocations.setupLocations(self.event)
-					  
+					
 	def setupAdmin(self):
 		self.SBAdmin.setupAdmin(self.event)
 	
 	def setupTR(self):
 		self.SBTax.setupTR()
+		self.SBLocations.enableTR(self.event)
 		
 	
