@@ -36,13 +36,13 @@ def MORECOLOR():
     colorfg = "#"+code.translate(table)
     return ([colorbg, colorfg])    
     
-def begin(maindata, crawler, checkboxes, username, password, org, locationBtn):
+def begin(maindata, crawler, checkboxes, username, password, org, locationBtn, filepath):
     locationBtn.config(state="normal")
     for box in checkboxes:
         if checkboxes[box].ischeck():
             val = box.split('**')
             maindata.setAttribute(val[0], val[1], True)
-    crawler.setup(maindata, username, password, org)
+    crawler.setup(maindata, username, password, org, filepath)
 
 
 def setupLocs(crawler, name, buttons = None):
@@ -56,7 +56,7 @@ def setupLocs(crawler, name, buttons = None):
     elif name == 'Tax':
         crawler.setupTR()
     elif name == 'Pages':
-        print name
+        crawler.setupPages()
     elif name == 'Email':
         print name
     elif name == 'Pledge':
@@ -64,7 +64,12 @@ def setupLocs(crawler, name, buttons = None):
     elif name == 'Links':
         print name
     
-       
+def folderSaveTo(mybutton, root):
+    myfolder = tkFileDialog.askdirectory(parent=root, title='Choose a folder to save temp files to')
+    if myfolder:
+        mybutton.config(text=myfolder)
+    
+        
 def main():   
     print "Starting!!"
     root = Tk()
@@ -101,6 +106,8 @@ def main():
     Entry(userinfo, textvariable=password, show='*').grid(column=1, row=1, sticky=(N, S, E, W)) 
     Label(userinfo, text="Org").grid(column=0, row=2, sticky=(W))
     org = dd.DropDownBox(userinfo, myorgs, 1, 2)
+    fileBtn = Button(userinfo, text="Save Temp Files At", command= lambda: folderSaveTo(fileBtn, root))
+    fileBtn.grid(column=1, row=3, sticky=(W))   
     
     content = Frame(root, padx=4, pady=4)
     content.grid(column=0, row=1, sticky=(N,S,E,W))
@@ -151,7 +158,7 @@ def main():
     
     color = MORECOLOR()
     helv36 = tkFont.Font(family='Helvetica', size=12, weight='bold')
-    runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button['locations']))
+    runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button['locations'], fileBtn["text"]))
     runbtn['font'] = helv36
     runbtn.grid(column=0, row=0, pady=2, columnspan = 3)   
     

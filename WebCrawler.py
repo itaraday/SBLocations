@@ -6,6 +6,7 @@ Created on Dec 15, 2015
 from SBLocations import SBLocations 
 from SBAdmin import SBAdmin 
 from SBTax import SBTax 
+from SBPages import SBPages 
 from contextlib import contextmanager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -16,7 +17,7 @@ from selenium.webdriver.common.keys import Keys
 from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
-
+import urllib
 	
 @contextmanager
 def wait_for_page_load(self, timeout=60):
@@ -33,6 +34,7 @@ class crawler:
 		self.SBLocations = SBLocations(self)
 		self.SBAdmin = SBAdmin(self)
 		self.SBTax = SBTax(self)
+		self.SBPages = SBPages(self)
 		with open('eventData.json') as data_file:
 			self.eventData = json.load(data_file) 
 	
@@ -63,6 +65,8 @@ class crawler:
 	def Ewait(self, amount, mytype, element):
 		if mytype == "xpath":
 			WebDriverWait(self.browser,amount).until(EC.presence_of_element_located((By.XPATH,element)))
+		elif mytype == "id":
+			WebDriverWait(self.browser,amount).until(EC.presence_of_element_located((By.ID,element)))
 			
 	def select(self, mytype, element, value):
 		if mytype == 'id':
@@ -99,6 +103,11 @@ class crawler:
 		return values
 		
 	
+	def stealImage(self, mytype, element, name):
+		src = self.getElemAttribute(mytype, element, 'src')
+		saveas = self.filepath + "/" + name + ".png"
+		urllib.urlretrieve(src, saveas)
+		
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
 		self.maindata.resetOld()
 		elem = self.getElemAttribute("id", table, 'innerHTML')
@@ -119,7 +128,14 @@ class crawler:
 
 	def quit(self):
 		self.browser.close()
+	
+	def newTab(self):
+		self.browser.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 't') 
 		
+	def closeTab(self):
+		self.browser.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w') 
+	
+	
 	def pageClick(self, mytype, clickTo):
 		if mytype == "id":
 			self.browser.find_element_by_id(clickTo).click()
@@ -154,14 +170,18 @@ class crawler:
 			if box.get_attribute("checked") != check:
 				box.click()
 	
+	def goToUrl(self, url):
+		self.browser.get(url)
+
 	#SBLocation main functions
-	def setup(self, maindata, username, password, org):
+	def setup(self, maindata, username, password, org, filepath):
 		self.maindata = maindata
 		self.event = self.eventData[org]["new"]
 		self.eventOld = self.eventData[org]["old"]
+		self.filepath = filepath
 		#logging in
 		with wait_for_page_load(self.browser):
-			self.browser.get("https://admin.e2rm.com")
+			self.goToUrl("https://admin.e2rm.com")
 		self.inputData("id", "textOrganizationID", org)
 		self.inputData("id", "textUsername", username)
 		self.inputData("id", "textPassword", password)
@@ -170,6 +190,9 @@ class crawler:
 	def setupLocations(self):	 
 		self.SBLocations.setupLocations(self.event)
 					
+	def execute_script(self, script):
+		self.browser.execute_script(script)
+		
 	def setupAdmin(self):
 		self.SBAdmin.setupAdmin(self.event)
 	
@@ -177,4 +200,9 @@ class crawler:
 		self.SBTax.setupTR()
 		self.SBLocations.enableTR(self.event)
 		
-	
+	def setupPages(self):
+		self.SBLocations.getLocURL(self.event)
+		print self.filepath
+		#self.SBPages.findLogin()
+		#self.SBPages.setuppages()
+		

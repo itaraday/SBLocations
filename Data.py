@@ -36,7 +36,7 @@ class dataset:
 		
 	
 	def save(self, filepath):
-		self.df.to_csv(filepath, encoding='mbcs') 
+		self.df.to_csv(filepath, encoding='mbcs', index=False) 
 		
 	def getLocations(self, returningStatus="all", myName = "Charity's Name"):
 		if returningStatus == "new":

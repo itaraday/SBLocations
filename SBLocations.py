@@ -6,14 +6,17 @@ class SBLocations():
 	def __init__(self, crawler):
 		self.crawler = crawler
 		
-	def goToLocations(self, event):
+	def goToEvent(self, event):
 		#Go to events page
 		self.crawler.pageLoad("id","ucBodyHead_hyperlinkEventTab" )
 		#go to event
-		self.crawler.pageLoad("text",event )
+		self.crawler.pageLoad("text",event )		
+	
+	def goToLocations(self, event):
+		self.goToEvent(event)
 		#go to locations
 		self.crawler.pageLoad("id","ucMenu_HyperLinkMenu_EventLocation" )		 
-
+	
 	def enableTR(self, event):
 		self.goToLocations(event)
 		try:
@@ -65,6 +68,17 @@ class SBLocations():
 		self.crawler.inputData("id", 'ucEventLocationDetail_textboxFundraisingGoal', self.crawler.getAttributeOne(loc, "goal"))
 
 			
+	def getLocURL(self, event):
+		self.goToEvent(event)
+		self.crawler.pageLoad("id", "linkbuttonEventLocationLink")
+		self.crawler.pageClick("id", "rdoIndividualLinks")
+		for loc in self.crawler.getLocations():
+			myurl = self.crawler.getElemAttribute("xpath", '''//div[@id="divLocationHomePageLinks"]
+												//div[contains(text(), "'''+loc+'''")]
+												/following-sibling::div
+												//input[@type="text"]''', "value")
+			self.crawler.setAttribute(loc, 'Location Page', myurl)
+		
 	def setupLocations(self, event):		
 
 		self.goToLocations(event)
