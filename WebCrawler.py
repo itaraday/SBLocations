@@ -18,6 +18,7 @@ from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
+from urlparse import urlparse, parse_qs
 	
 @contextmanager
 def wait_for_page_load(self, timeout=60):
@@ -42,14 +43,15 @@ class crawler:
 		return self.eventData.keys()
 
 	#Helper functions
-	def inputData(self, mytype, element, text):
+	def inputData(self, mytype, element, text, clear=True):
 		if mytype == 'id':
 			elem = self.browser.find_element_by_id(element)
 		elif mytype == "name":
 			elem = self.browser.find_element_by_name(element)
 		else:
 			elem = ""			
-		elem.clear()   
+		if clear:
+			elem.clear()   
 		elem.send_keys(text) 
 	
 	def clear(self, mytype, element):
@@ -172,7 +174,37 @@ class crawler:
 	
 	def goToUrl(self, url):
 		self.browser.get(url)
-
+	
+	def writeInIFrame(self, mytypeFrame, frameElement, mytype, element, text):
+		if mytypeFrame == 'xpath':
+			driver = self.browser.find_element_by_xpath(frameElement)
+		self.browser.switch_to_frame(driver)
+		self.inputData(mytype, element, text)
+		self.browser.switch_to_default_content()
+		
+	def cleanURL(self, url):
+		parse = urlparse(url)
+		query = parse_qs(parse.query)
+		url = parse.scheme +"://" + parse.netloc + parse.path +"?"
+		for key in query:
+			if not key == "Referrer":
+				url = url + key +"=" + query[key][0] + "&"
+		return url[:-1]
+		
+	def getIDs(self):
+		myIDS = {
+				"Location Page": "locationID",
+				"Personal Page": "registrationID",
+				"Donation Page": "SPID"
+				}
+		for loc in self.getLocations():
+			for key in myIDS:
+				URL = self.getAttributeOne(loc, key)
+				parse = urlparse(URL)
+				qs = parse_qs(parse.query)
+				self.setAttribute(loc, key, qs[myIDS[key]])
+			
+		
 	#SBLocation main functions
 	def setup(self, maindata, username, password, org, filepath):
 		self.maindata = maindata
@@ -202,7 +234,8 @@ class crawler:
 		
 	def setupPages(self):
 		self.SBLocations.getLocURL(self.event)
-		print self.filepath
-		#self.SBPages.findLogin()
-		#self.SBPages.setuppages()
+		self.SBPages.findLogin()
+		self.SBPages.setuppages()
+		self.getIDs()
+		self.SBLocations.finishDesc(self.event)
 		

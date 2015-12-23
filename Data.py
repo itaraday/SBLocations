@@ -9,12 +9,12 @@ class dataset:
 	def __init__(self, filePath):
 		self.df = pd.read_csv(filePath, encoding='mbcs')
 		self.df.loc[self.df["Charity's Name"].isnull(), "Charity's Name"] = self.df["Charity's Legal Name"]
+		self.df.loc[self.df["Description Personal"].isnull(), "Description Personal"] = self.df["description"]
 		self.df["old name"] = self.df["Charity's Name"]
 		self.df.dropna(how="all", inplace=True) 
 		self.df['newImage'] = False
 		self.df['newSig'] = False
 		self.df['French'] = False
-		self.df['new'] = False
 		self.df['new'] = False
 		self.df["city"] = self.df["city"].str.title()
 		self.df["province"] = self.df["province"].str.title()
@@ -69,3 +69,5 @@ class dataset:
 	def getAttributeOne(self, name, attribute):
 		return self.df.loc[self.df["Charity's Name"] == name, attribute].iloc[0]
 	
+	def getIDs(self):
+		

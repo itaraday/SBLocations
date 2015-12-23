@@ -17,6 +17,25 @@ class SBLocations():
 		#go to locations
 		self.crawler.pageLoad("id","ucMenu_HyperLinkMenu_EventLocation" )		 
 	
+	def finishDesc(self, event):
+		self.goToLocations(event)
+		try:
+			self.crawler.pageLoad("id","buttonShowAll" )
+		except:
+			pass		
+		self.crawler.getOldNames('datagridLocations', 0)
+		for loc in self.crawler.getLocations():
+			if self.crawler.getAttributeOne(loc, "tax receipts"):
+				try:
+					self.crawler.pageLoad("id","buttonShowAll" )
+				except:
+					pass
+				self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 		
+				self.crawler.pageLoad("id", "hyperlinkEditInfo")
+				myurl = self.crawler.getAttributeOne(loc, "Donation Page")
+				message = '\nTo make a direct donation to '+loc+' please <a href="'+myurl+'">visit our donation page</a>.\nThank you!'
+				self.crawler.inputData("id", "ucEventLocationContent_textboxLocationLongDescription1", message, False)
+				
 	def enableTR(self, event):
 		self.goToLocations(event)
 		try:
