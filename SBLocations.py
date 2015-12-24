@@ -62,7 +62,8 @@ class SBLocations():
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxCity', self.crawler.getAttributeOne(loc, "city"))
 		self.crawler.inputData("id", 'ucEventLocationContent_ucPostalCode_txtPostalCode', self.crawler.getAttributeOne(loc, "postal code"))
 		self.crawler.select("id", "ucEventLocationContent_dropdownlistProvince", self.crawler.getAttributeOne(loc, "province"))
-		self.crawler.setAttribute(loc, 'export ID', loc)
+		exportID = self.crawler.getElemAttribute("id", 'ucEventLocationContent_textboxExportLocationID', 'value')
+		self.crawler.setAttribute(loc, 'export ID', exportID)
 		
 		if newimage:
 			#if there is an old image try to remove it
