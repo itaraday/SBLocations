@@ -48,8 +48,10 @@ class crawler:
 			elem = self.browser.find_element_by_id(element)
 		elif mytype == "name":
 			elem = self.browser.find_element_by_name(element)
+		elif mytype == "tag":
+			elem = self.browser.find_element_by_tag_name(element)
 		else:
-			elem = ""			
+			return			
 		if clear:
 			elem.clear()   
 		elem.send_keys(text) 
@@ -66,9 +68,9 @@ class crawler:
 		
 	def Ewait(self, amount, mytype, element):
 		if mytype == "xpath":
-			WebDriverWait(self.browser,amount).until(EC.presence_of_element_located((By.XPATH,element)))
+			WebDriverWait(self.browser,amount).until(EC.visibility_of_element_located((By.XPATH,element)))
 		elif mytype == "id":
-			WebDriverWait(self.browser,amount).until(EC.presence_of_element_located((By.ID,element)))
+			WebDriverWait(self.browser,amount).until(EC.visibility_of_element_located((By.ID,element)))
 			
 	def select(self, mytype, element, value):
 		if mytype == 'id':
@@ -107,7 +109,7 @@ class crawler:
 	
 	def stealImage(self, mytype, element, name):
 		src = self.getElemAttribute(mytype, element, 'src')
-		saveas = self.filepath + "/" + name + ".png"
+		saveas = self.filepath + "/" + name
 		urllib.urlretrieve(src, saveas)
 		
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
@@ -169,7 +171,7 @@ class crawler:
 		#go through all checkboxes on the page and make sure clicked or unclicked
 		#check = NONE to unclick them 
 		for box in checkboxes:
-			if box.get_attribute("checked") != check:
+			if (box.get_attribute("checked") != check) and (box.is_displayed()):
 				box.click()
 	
 	def goToUrl(self, url):
@@ -182,6 +184,9 @@ class crawler:
 		self.inputData(mytype, element, text)
 		self.browser.switch_to_default_content()
 		
+	def getUrl(self):
+		return self.browser.current_url
+	
 	def cleanURL(self, url):
 		parse = urlparse(url)
 		query = parse_qs(parse.query)
@@ -202,7 +207,7 @@ class crawler:
 				URL = self.getAttributeOne(loc, key)
 				parse = urlparse(URL)
 				qs = parse_qs(parse.query)
-				self.setAttribute(loc, key, qs[myIDS[key]])
+				self.setAttribute(loc, myIDS[key], qs[myIDS[key]])
 			
 		
 	#SBLocation main functions
@@ -238,4 +243,5 @@ class crawler:
 		self.SBPages.setuppages()
 		self.getIDs()
 		self.SBLocations.finishDesc(self.event)
+		self.SBPages.setCharityUDF(self.event)
 		

@@ -68,6 +68,4 @@ class dataset:
 
 	def getAttributeOne(self, name, attribute):
 		return self.df.loc[self.df["Charity's Name"] == name, attribute].iloc[0]
-	
-	def getIDs(self):
 		

@@ -10,7 +10,9 @@ class SBAdmin():
 		
 	def rightLocations(self, loc, event):
 		self.crawler.pageLoad("xpath",'//a[@eventname="'+event+'"]')
-		self.crawler.pageClick("xpath", '//td[contains(text(),"'+loc+'")]/following-sibling::td[2]//input[@type="checkbox"]')
+		xpath = '//td[contains(text(),"'+loc+'")]/following-sibling::td[2]//input[@type="checkbox"]'
+		if self.crawler.getElemAttribute("xpath", xpath, "checked") == None:
+			self.crawler.pageClick("xpath", xpath)
 			
 	def rightLocationsNew(self, loc, event):
 		self.crawler.pageLoad('id', 'checkboxAccessAllEvents')

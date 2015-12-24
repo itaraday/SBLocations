@@ -12,17 +12,19 @@ class SBLocations():
 		#go to event
 		self.crawler.pageLoad("text",event )		
 	
-	def goToLocations(self, event):
+	def goToLocations(self, event, showall = None):
 		self.goToEvent(event)
 		#go to locations
-		self.crawler.pageLoad("id","ucMenu_HyperLinkMenu_EventLocation" )		 
+		self.crawler.pageLoad("id","ucMenu_HyperLinkMenu_EventLocation" )	
+		if showall:
+			try:
+				self.crawler.pageLoad("id",showall)
+			except:
+				pass
 	
 	def finishDesc(self, event):
-		self.goToLocations(event)
-		try:
-			self.crawler.pageLoad("id","buttonShowAll" )
-		except:
-			pass		
+		self.crawler.Ewait(10, "id", "ucBodyHead_hyperlinkEventTab")
+		self.goToLocations(event, "buttonShowAll")
 		self.crawler.getOldNames('datagridLocations', 0)
 		for loc in self.crawler.getLocations():
 			if self.crawler.getAttributeOne(loc, "tax receipts"):
@@ -33,27 +35,22 @@ class SBLocations():
 				self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 		
 				self.crawler.pageLoad("id", "hyperlinkEditInfo")
 				myurl = self.crawler.getAttributeOne(loc, "Donation Page")
-				message = '\nTo make a direct donation to '+loc+' please <a href="'+myurl+'">visit our donation page</a>.\nThank you!'
+				message = '\n\nTo make a direct donation to '+loc+' please <a href="'+myurl+'">visit our donation page</a>.\nThank you!'
 				self.crawler.inputData("id", "ucEventLocationContent_textboxLocationLongDescription1", message, False)
+				self.crawler.pageLoad("id", "buttonSubmit")
+				self.goToLocations(event, "buttonShowAll")
+				
 				
 	def enableTR(self, event):
-		self.goToLocations(event)
-		try:
-			self.crawler.pageLoad("id","buttonShowAll" )
-		except:
-			pass		
+		self.goToLocations(event, "buttonShowAll")
 		self.crawler.getOldNames('datagridLocations', 0)
 		for loc in self.crawler.getLocations():
 			if self.crawler.getAttributeOne(loc, "tax receipts"):
-				try:
-					self.crawler.pageLoad("id","buttonShowAll" )
-				except:
-					pass
 				self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 
 				self.crawler.pageLoad("xpath", '//li[@id="ucMenu_liEventLocationTax"]/a')
 				self.crawler.select("id", "dropDownListBundleName", self.crawler.getAttributeOne(loc, "TR name"))
 				self.crawler.pageLoad("id", "buttonSubmit")
-				self.goToLocations(event)
+				self.goToLocations(event, "buttonShowAll")
 				
 				
 		
@@ -65,7 +62,7 @@ class SBLocations():
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxCity', self.crawler.getAttributeOne(loc, "city"))
 		self.crawler.inputData("id", 'ucEventLocationContent_ucPostalCode_txtPostalCode', self.crawler.getAttributeOne(loc, "postal code"))
 		self.crawler.select("id", "ucEventLocationContent_dropdownlistProvince", self.crawler.getAttributeOne(loc, "province"))
-		
+		self.crawler.setAttribute(loc, 'export ID', loc)
 		
 		if newimage:
 			#if there is an old image try to remove it
