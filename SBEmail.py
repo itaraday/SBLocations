@@ -9,6 +9,7 @@ class SBEmail():
 	def fixEmail(self, loc, needTR):
 		adminEmail = self.crawler.getAttributeOne(loc, "Email Administrator")
 		sendername = "Scotiabank Charity Challenge l " + loc
+		self.crawler.Ewait(10, "id", "cke_33")
 		self.crawler.pageClick("id", "cke_33")
 		email = self.crawler.getElemAttribute("xpath", '//div[@id="cke_1_contents"]/textarea', "value")
 		soup = BeautifulSoup(email, "lxml")
@@ -21,7 +22,6 @@ class SBEmail():
 		self.crawler.inputData("xpath", '//div[@id="cke_1_contents"]/textarea', soup.body.prettify())
 		self.crawler.pageClick("id", "cke_33")
 		if needTR:
-			print needTR
 			self.crawler.selectLast("id", "ddlTaxReceiptTemplate")
 		self.crawler.Ewait(10, "id", "showAdvancedOptions")
 		self.crawler.pageClick("id", "showAdvancedOptions")

@@ -6,6 +6,7 @@ Created on Dec 15, 2015
 from SBLocations import SBLocations 
 from SBAdmin import SBAdmin 
 from SBTax import SBTax 
+from SBPledge import SBPledge 
 from SBPages import SBPages 
 from SBEmail import SBEmail
 from contextlib import contextmanager
@@ -38,6 +39,7 @@ class crawler:
 		self.SBTax = SBTax(self)
 		self.SBPages = SBPages(self)
 		self.SBEmail = SBEmail(self)
+		self.SBPledge = SBPledge(self)
 		with open('eventData.json') as data_file:
 			self.eventData = json.load(data_file) 
 	
@@ -91,8 +93,10 @@ class crawler:
 		try:
 			if mytype == 'id':
 				self.browser.find_element_by_id(element)
-			if mytype == 'xpath':
+			elif mytype == 'xpath':
 				self.browser.find_element_by_xpath(element)
+			elif mytype == 'partial':
+				self.browser.find_element_by_partial_link_text(element)
 		except:
 			found = False
 		return found
@@ -157,6 +161,8 @@ class crawler:
 			self.browser.find_element_by_link_text(clickTo).click()
 		elif mytype == 'xpath':
 			self.browser.find_element_by_xpath(clickTo).click()
+		elif mytype == 'partial':
+				self.browser.find_element_by_partial_link_text(clickTo).click()
 
 	def pageLoad(self, mytype, clickTo):
 		with wait_for_page_load(self.browser):
@@ -255,6 +261,10 @@ class crawler:
 		self.SBLocations.finishDesc(self.event)
 		self.SBPages.setCharityUDF(self.event)
 	
+	def setupPledge(self):
+		self.SBLocations.goToEvent(self.event)
+		self.SBPledge.setupPledge()
+		
 	def setupEmail(self):
 		self.SBLocations.goToEvent(self.event)
 		self.SBEmail.setupEmail()

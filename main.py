@@ -77,7 +77,7 @@ def setupLocs(crawler, name, buttons = None):
 	elif name == 'Email':
 		crawler.setupEmail()
 	elif name == 'Pledge':
-		print name
+		crawler.setupPledge()
 	elif name == 'Links':
 		print name
 	
