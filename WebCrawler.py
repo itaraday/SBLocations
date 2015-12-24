@@ -7,6 +7,7 @@ from SBLocations import SBLocations
 from SBAdmin import SBAdmin 
 from SBTax import SBTax 
 from SBPages import SBPages 
+from SBEmail import SBEmail
 from contextlib import contextmanager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -36,6 +37,7 @@ class crawler:
 		self.SBAdmin = SBAdmin(self)
 		self.SBTax = SBTax(self)
 		self.SBPages = SBPages(self)
+		self.SBEmail = SBEmail(self)
 		with open('eventData.json') as data_file:
 			self.eventData = json.load(data_file) 
 	
@@ -75,6 +77,14 @@ class crawler:
 	def select(self, mytype, element, value):
 		if mytype == 'id':
 			Select(self.browser.find_element_by_id(element)).select_by_visible_text(value)
+	
+	def selectLast(self, mytype, element):
+		if mytype == 'id':
+			elem = Select(self.browser.find_element_by_id(element))
+		else:
+			return
+		selectLen = len(elem.options)
+		elem.select_by_index(selectLen-1)
 	
 	def fineElement(self, mytype, element):
 		found = True
@@ -176,7 +186,7 @@ class crawler:
 	
 	def goToUrl(self, url):
 		self.browser.get(url)
-	
+		
 	def writeInIFrame(self, mytypeFrame, frameElement, mytype, element, text):
 		if mytypeFrame == 'xpath':
 			driver = self.browser.find_element_by_xpath(frameElement)
@@ -244,4 +254,7 @@ class crawler:
 		self.getIDs()
 		self.SBLocations.finishDesc(self.event)
 		self.SBPages.setCharityUDF(self.event)
-		
+	
+	def setupEmail(self):
+		self.SBLocations.goToEvent(self.event)
+		self.SBEmail.setupEmail()

@@ -75,7 +75,7 @@ def setupLocs(crawler, name, buttons = None):
 	elif name == 'Pages':
 		crawler.setupPages()
 	elif name == 'Email':
-		print name
+		crawler.setupEmail()
 	elif name == 'Pledge':
 		print name
 	elif name == 'Links':
@@ -167,16 +167,16 @@ def main():
 	button['Pages'].grid(column=2, row=3, pady=2, padx=3)  
 
 	color = MORECOLOR()
-	button['Email'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Email", command= lambda: setupLocs(crawler, 'Email'))
-	button['Email'].grid(column=0, row=4, pady=2, padx=3)  
-	
-	color = MORECOLOR()
 	button['Pledge'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Pledge", command= lambda: setupLocs(crawler, 'Pledge'))
-	button['Pledge'].grid(column=1, row=4, pady=2, padx=3)	
+	button['Pledge'].grid(column=0, row=4, pady=2, padx=3)	
 
 	color = MORECOLOR()
-	button['Links'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Links", command= lambda: setupLocs(crawler, 'Links'))
-	button['Links'].grid(column=2, row=4, pady=2, padx=3)  
+	button['Email'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Email", command= lambda: setupLocs(crawler, 'Email'))
+	button['Email'].grid(column=2, row=4, pady=2, padx=3)  
+	
+	#color = MORECOLOR()
+	#button['Links'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Links", command= lambda: setupLocs(crawler, 'Links'))
+	#button['Links'].grid(column=2, row=4, pady=2, padx=3)  
 	
 	color = MORECOLOR()
 	helv36 = tkFont.Font(family='Helvetica', size=12, weight='bold')
