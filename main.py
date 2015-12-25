@@ -62,7 +62,7 @@ def begin(maindata, crawler, checkboxes, username, password, org, locationBtn, f
 		crawler.setup(maindata, username, password, org, filepath)
 
 
-def setupLocs(crawler, name, buttons = None):
+def setupLocs(crawler, name, buttons = None, root = None):
 	if buttons:
 		for key in buttons:
 			buttons[key].config(state="normal")
@@ -78,8 +78,9 @@ def setupLocs(crawler, name, buttons = None):
 		crawler.setupEmail()
 	elif name == 'Pledge':
 		crawler.setupPledge()
-	elif name == 'Links':
-		print name
+	elif name == 'Done':
+		crawler.Done()
+		ask_quit(root, crawler, crawler.maindata.filePath, crawler.maindata)
 	
 def folderSaveTo(mybutton, root):
 	myfolder = tkFileDialog.askdirectory(parent=root, title='Choose a folder to save temp files to')
@@ -172,11 +173,11 @@ def main():
 
 	color = MORECOLOR()
 	button['Email'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Email", command= lambda: setupLocs(crawler, 'Email'))
-	button['Email'].grid(column=2, row=4, pady=2, padx=3)  
+	button['Email'].grid(column=1, row=4, pady=2, padx=3)  
 	
-	#color = MORECOLOR()
-	#button['Links'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Links", command= lambda: setupLocs(crawler, 'Links'))
-	#button['Links'].grid(column=2, row=4, pady=2, padx=3)  
+	color = MORECOLOR()
+	button['Done'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="DONE!1!ONE!", command= lambda: setupLocs(crawler, 'Done',root = root))
+	button['Done'].grid(column=2, row=4, pady=2, padx=3)  
 	
 	color = MORECOLOR()
 	helv36 = tkFont.Font(family='Helvetica', size=12, weight='bold')

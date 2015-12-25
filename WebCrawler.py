@@ -229,9 +229,9 @@ class crawler:
 	#SBLocation main functions
 	def setup(self, maindata, username, password, org, filepath):
 		self.maindata = maindata
-		self.event = self.eventData[org]["new"]
-		self.eventOld = self.eventData[org]["old"]
+		self.event = self.eventData[org]
 		self.filepath = filepath
+		self.username = username
 		#logging in
 		with wait_for_page_load(self.browser):
 			self.goToUrl("https://admin.e2rm.com")
@@ -268,3 +268,6 @@ class crawler:
 	def setupEmail(self):
 		self.SBLocations.goToEvent(self.event)
 		self.SBEmail.setupEmail()
+	
+	def Done(self):
+		self.maindata.done(self.username)

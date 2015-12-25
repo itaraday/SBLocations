@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 
 def getOptions():
 	return {'newImage': 'new image',
@@ -7,6 +8,7 @@ def getOptions():
 	
 class dataset: 
 	def __init__(self, filePath):
+		self.filePath = filePath
 		self.df = pd.read_csv(filePath, encoding='mbcs')
 		self.df.loc[self.df["Charity's Name"].isnull(), "Charity's Name"] = self.df["Charity's Legal Name"]
 		self.df.loc[self.df["Description Personal"].isnull(), "Description Personal"] = self.df["description"]
@@ -68,4 +70,7 @@ class dataset:
 
 	def getAttributeOne(self, name, attribute):
 		return self.df.loc[self.df["Charity's Name"] == name, attribute].iloc[0]
-		
+	
+	def done(self, username):
+		username = username[1:] + " " + time.strftime("%Y/%m/%d") 
+		self.df.loc[self.df["Charity added by"].isnull(), "Charity added by"] = username
