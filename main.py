@@ -20,9 +20,9 @@ import tkFont
 
 def ask_quit(root, crawler, filePath, maindata):
 	if tkMessageBox.askokcancel("Quit", "You want to quit now? *sniff*"):
-		crawler.quit()
 		print "Saving: {}".format(filePath)
 		maindata.save(filePath)
+		crawler.quit()
 		root.destroy()
 
 def MORECOLOR():

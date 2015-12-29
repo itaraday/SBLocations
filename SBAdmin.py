@@ -65,7 +65,7 @@ class SBAdmin():
 
 	def setupAdmin(self, event):
 		self.crawler.pageLoad("id","ucBodyHead_hyperlinkConfigurationTab" )
-		self.crawler.getOldNames('ucBodyHead_hyperlinkConfigurationTab', 2)
+		self.crawler.getOldNames('dataGridAdministrators', 2)
 		
 		for loc in self.crawler.getLocations():
 			name = self.crawler.getAttributeOne(loc, "old name")

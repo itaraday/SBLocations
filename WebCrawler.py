@@ -133,12 +133,13 @@ class crawler:
 		locations = []
 		for row in soup.find_all('tr'):
 			locations.append(row.find_all('td')[eq].get_text())
-		for loc in self.maindata.getLocations(myName = myName):
+		for loc in self.maindata.getLocations():
+			myname = self.getAttributeOne(loc, myName)
 			oldratio = 70
 			ratio = 0
 			myloc = ""
 			for removedloc in locations:
-				ratio = fuzz.ratio(loc, removedloc)
+				ratio = fuzz.ratio(myname, removedloc)
 				if ratio > oldratio:
 					oldratio = ratio
 					myloc = removedloc

@@ -1,6 +1,7 @@
 import pandas as pd
 import time
-
+import string
+import re
 def getOptions():
 	return {'newImage': 'new image',
 			'newSig': 'New Sig',
@@ -51,11 +52,14 @@ class dataset:
 	#if charity name is one word the name is prefix_charity
 	#if charity name is mulitple words take first character from each word 
 	def makeAdminName(self, loc, prefix):
-		if len(loc.split()) > 1:
-			username = "".join(item[0].upper() for item in loc.split())
+		re.sub(r'\(.*?\)', '', loc)
+		exclude = set(string.punctuation)
+		locName = ''.join(ch for ch in loc if ch not in exclude)
+		if len(locName.split()) > 1:
+			username = "".join(item[0].upper() for item in locName.split())
 			username = "_".join([prefix, username])
 		else:
-			username = "_".join([prefix, loc])
+			username = "_".join([prefix, locName])
 		username = username
 		return username
 		

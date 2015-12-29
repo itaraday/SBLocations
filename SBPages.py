@@ -47,7 +47,7 @@ class SBPages():
 			self.GoToRelationships()
 			
 				
-	def RegV2(self, loc, username):
+	def RegV2(self, loc, username, newUser):
 		self.crawler.Ewait(20, "id", "registrationTypeForm")
 		self.crawler.pageClick("id", "individualParticipantTypeButton")
 		
@@ -115,6 +115,6 @@ class SBPages():
 					self.crawler.pageLoad("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_btnSubmit")
 
 			if self.crawler.getAttributeOne(loc, "canLogin") != True:		
-				self.RegV2(loc, username)
+				self.RegV2(loc, username, newUser)
 			self.FundraisingHub(loc)				   
 		self.crawler.closeTab()
