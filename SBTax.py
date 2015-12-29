@@ -137,7 +137,7 @@ class SBTax():
                 a3 = self.crawler.getAttributeOne(loc, "city") + " " + self.crawler.getAttributeOne(loc, "province") + " " + self.crawler.getAttributeOne(loc, "postal code")
                 a4 = "P. " + self.crawler.getAttributeOne(loc, "TRPhone") + " E. " + self.crawler.getAttributeOne(loc, "TREmail")
                 address = "\n".join([a1, a2, a3, a4])
-                self.crawler.inputData("id", 'ucPDFTemplateBuilder_AdditionalText', address)
+                self.crawler.inputData("id", 'ucPDFTemplateBuilder_OrgAddress', address)
                 
                 #check if need images
                 if newTR:
