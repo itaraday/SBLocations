@@ -17,6 +17,10 @@ class SBEmail():
 		try:
 			soup.find(text="%OrganizationName%").replaceWith('%LocationName%')
 		except:
+			pass		
+        try:
+			soup.find(text="%EventName%").replaceWith('the %EventName%')
+		except:
 			pass
 		soup.body.hidden=True
 		self.crawler.inputData("xpath", '//div[@id="cke_1_contents"]/textarea', soup.body.prettify())
