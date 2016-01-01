@@ -157,37 +157,44 @@ def main():
 	control = Frame(root)
 	control.grid(column=0, row=2, padx=5, pady=15)
 	button = {}
-	   
+	helv36 = font.Font(family='Helvetica', size=12, weight='bold')
+	
 	color = MORECOLOR()
 	button['locations'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Locations", command= lambda: setupLocs(crawler, 'locations', button))
 	button['locations'].grid(column=0, row=1, pady=2, columnspan = 3) 
+	button['locations']['font'] = helv36
 	
 	color = MORECOLOR()
 	button['Admin'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Admin", command= lambda: setupLocs(crawler, 'Admin'))
 	button['Admin'].grid(column=0, row=3, pady=2, padx=3)	 
+	button['Admin']['font'] = helv36
 	
 	color = MORECOLOR()
 	button['Tax'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Tax Receipt", command= lambda: setupLocs(crawler, 'Tax'))
 	button['Tax'].grid(column=1, row=3, pady=2, padx=3)	 
-
+	button['Tax']['font'] = helv36
+	
 	color = MORECOLOR()
 	button['Pages'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Pages", command= lambda: setupLocs(crawler, 'Pages'))
 	button['Pages'].grid(column=2, row=3, pady=2, padx=3)  
-
+	button['Pages']['font'] = helv36
+	
 	color = MORECOLOR()
 	button['Pledge'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Pledge", command= lambda: setupLocs(crawler, 'Pledge'))
 	button['Pledge'].grid(column=0, row=4, pady=2, padx=3)	
-
+	button['Pledge']['font'] = helv36
+	
 	color = MORECOLOR()
 	button['Email'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="Setup Email", command= lambda: setupLocs(crawler, 'Email'))
 	button['Email'].grid(column=1, row=4, pady=2, padx=3)  
+	button['Email']['font'] = helv36
 	
 	color = MORECOLOR()
-	button['Done'] = Button(control, state = DISABLED, background=color[0], fg=color[1], text="DONE!1!ONE!", command= lambda: setupLocs(crawler, 'Done',root = root))
+	button['Done'] = Button(control, background=color[0], fg=color[1], text="DONE!1!ONE!", command= lambda: setupLocs(crawler, 'Done',root = root))
 	button['Done'].grid(column=2, row=4, pady=2, padx=3)  
+	button['Done']['font'] = helv36
 	
 	color = MORECOLOR()
-	helv36 = font.Font(family='Helvetica', size=12, weight='bold')
 	runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button['locations'], fileBtn["text"]))
 	runbtn['font'] = helv36
 	runbtn.grid(column=0, row=0, pady=2, columnspan = 3)   
