@@ -13,7 +13,6 @@ except:
 	import ttk
 	import tkMessageBox as messagebox
 	import tkFileDialog as filedialog
-	from tempfile import mkstemp
 	from string import maketrans
 	import tkFont as font
 
