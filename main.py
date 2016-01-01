@@ -21,6 +21,7 @@ import Data as data
 import WebCrawler 
 import random
 from DropDownBox import DropDownBox
+import mycheckbox as chk
 import base64
 import zlib
 

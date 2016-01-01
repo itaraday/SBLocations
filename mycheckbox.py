@@ -1,11 +1,15 @@
-from Tkinter import *
-import ttk as ttk
+try:
+    from tkinter import *
+    from tkinter.ttk import *
+except:
+    from Tkinter import *
+    from ttk import *
     
 class singlecheck:
     def __init__(self, master, mytext, col, row):
         self.buttonval = IntVar()
         #self.buttonval.set(1)
-        self.CheckButton = ttk.Checkbutton(master, text=mytext,
+        self.CheckButton = Checkbutton(master, text=mytext,
                                            variable=self.buttonval)    
         self.CheckButton.grid(column=col, row=row, sticky=(W))
         
@@ -22,13 +26,13 @@ class checklist:
         self.buttonDic = {}
         if mytext != None:
             self.buttonDic[mytext] = IntVar()
-            aCheckButton = ttk.Checkbutton(master, text=mytext,
+            aCheckButton = Checkbutton(master, text=mytext,
                                            variable=self.buttonDic[mytext])
             aCheckButton.grid(sticky='w')
         elif mydict != None:
             for key in sorted(mydict.iterkeys()):
                 self.buttonDic[key] = IntVar()
-                aCheckButton = ttk.Checkbutton(master, text=key,
+                aCheckButton = Checkbutton(master, text=key,
                                                 variable=self.buttonDic[key])
                 aCheckButton.grid(column=col, row=row, sticky=(W))
                 row += 1

@@ -20,7 +20,8 @@ from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
-	
+from urllib.parse import urlparse, parse_qs
+    
 @contextmanager
 def wait_for_page_load(self, timeout=60):
 	old_page = self.find_element_by_tag_name('html')
@@ -123,7 +124,10 @@ class crawler:
 	def stealImage(self, mytype, element, name):
 		src = self.getElemAttribute(mytype, element, 'src')
 		saveas = self.filepath + "/" + name
-		urllib.urlretrieve(src, saveas)
+		try:
+			urllib.urlretrieve(src, saveas)
+		except:
+			urllib.request.urlretrieve
 		
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
 		self.maindata.resetOld()
