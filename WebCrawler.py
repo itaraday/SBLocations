@@ -20,7 +20,6 @@ from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
-from urlparse import urlparse, parse_qs
 	
 @contextmanager
 def wait_for_page_load(self, timeout=60):
@@ -44,7 +43,7 @@ class crawler:
 			self.eventData = json.load(data_file) 
 	
 	def getOrgs(self):
-		return self.eventData.keys()
+		return list(self.eventData.keys())
 
 	#Helper functions
 	def inputData(self, mytype, element, text, clear=True):

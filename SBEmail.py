@@ -18,7 +18,7 @@ class SBEmail():
 			soup.find(text="%OrganizationName%").replaceWith('%LocationName%')
 		except:
 			pass		
-        try:
+		try:
 			soup.find(text="%EventName%").replaceWith('the %EventName%')
 		except:
 			pass

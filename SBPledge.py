@@ -19,11 +19,11 @@ class SBPledge():
 					except:
 						pass
 					else:
-						print "You have 30secs to add custom pledge form for {}".format(loc)
-						print "please don't leave this page"
+						print("You have 30secs to add custom pledge form for {}".format(loc))
+						print("please don't leave this page")
 						time.sleep(30)	
 						self.crawler.pageLoad("id",'buttonSubmit')						
-						if pos <> 1:
+						if pos != 1:
 							self.crawler.pageLoad("text", str(pos))					
 			pos = pos + 1
 			try:

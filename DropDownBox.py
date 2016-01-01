@@ -1,10 +1,14 @@
-from Tkinter import *
-import ttk as ttk
-    
+try:
+    from tkinter import *
+    from tkinter.ttk import *
+except:
+    from Tkinter import *
+    from ttk import *
+
 class DropDownBox:
     def __init__(self, master, myoptions, col, row):
         self.optionselection = StringVar()
-        self.optionsbox = ttk.Combobox(master, textvariable=self.optionselection)
+        self.optionsbox = Combobox(master, textvariable=self.optionselection)
         self.optionsbox["state"] = "readonly"
         if len(myoptions) >0:
             self.optionsbox['values'] = myoptions

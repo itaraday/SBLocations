@@ -77,7 +77,7 @@ class SBLocations():
 			try:
 				self.crawler.Ewait(60, "xpath", '//div[@id="divPreviewThubnail"]/img')
 			except:
-				print "Took too long to select an image for: {}".fomat(loc)
+				print("Took too long to select an image for: {}".fomat(loc))
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxLocationLongDescription1', self.crawler.getAttributeOne(loc, "description"))
 		
 	def LoctionDetails(self, loc):
@@ -119,7 +119,7 @@ class SBLocations():
 			try:
 				self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 
 			except:
-				print "{} is a new location".format(loc)
+				print("{} is a new location".format(loc))
 				self.crawler.setAttribute(loc, 'new', True)
 				needreload = False
 			else:

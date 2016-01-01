@@ -4,23 +4,30 @@ Created on Dec 15, 2015
 @author: itaraday
 '''
 
-from Tkinter import *
-import ttk
-import tkMessageBox
+try:
+	from tkinter import *
+	from tkinter import filedialog, messagebox 
+	from tkinter import font 
+except:
+	from Tkinter import *
+	import ttk
+	import tkMessageBox as messagebox
+	import tkFileDialog as filedialog
+	from tempfile import mkstemp
+	from string import maketrans
+	import tkFont as font
+
 from tempfile import mkstemp
 import Data as data
 import WebCrawler 
-import tkFileDialog
-import textbox as textbox
-import mycheckbox as chk
-import DropDownBox as dd
-from string import maketrans
 import random
-import tkFont
+from DropDownBox import DropDownBox
+import base64
+import zlib
 
 def ask_quit(root, crawler, filePath, maindata):
-	if tkMessageBox.askokcancel("Quit", "You want to quit now? *sniff*"):
-		print "Saving: {}".format(filePath)
+	if messagebox.askokcancel("Quit", "You want to quit now? *sniff*"):
+		print("Saving: {}".format(filePath))
 		maindata.save(filePath)
 		crawler.quit()
 		root.destroy()
@@ -32,7 +39,10 @@ def MORECOLOR():
 	code = de+re+we
 	colorbg="#"+code
 	#inverse color
-	table = maketrans('0123456789abcdef','fedcba9876543210')
+	try:
+		table = str.maketrans('0123456789abcdef','fedcba9876543210')
+	except:
+		table = maketrans('0123456789abcdef','fedcba9876543210')
 	colorfg = "#"+code.translate(table)
 	return ([colorbg, colorfg])	   
 	
@@ -83,15 +93,15 @@ def setupLocs(crawler, name, buttons = None, root = None):
 		ask_quit(root, crawler, crawler.maindata.filePath, crawler.maindata)
 	
 def folderSaveTo(mybutton, root):
-	myfolder = tkFileDialog.askdirectory(parent=root, title='Choose a folder to save temp files to')
+	myfolder = filedialog.askdirectory(parent=root, title='Choose a folder to save temp files to')
 	if myfolder:
 		mybutton.config(text=myfolder)
 	
 		
 def main():	  
-	print "Starting!!"
+	print("Starting!!")
 	root = Tk()
-	filePath = tkFileDialog.askopenfilename(parent=root,title='Choose a file',filetypes=[('CSV files', '.csv')])
+	filePath = filedialog.askopenfilename(parent=root,title='Choose a file',filetypes=[('CSV files', '.csv')])
 	if not len(filePath):
 		tkMessageBox.showerror(
 			"KA-BOOM",
@@ -103,10 +113,8 @@ def main():
 	myorgs.insert(0,"Please select an Org")
 	maindata = data.dataset(filePath)
 	#removing the Tkinter logo by creating a temp blank icon file
-	ICON = (b'\x00\x00\x01\x00\x01\x00\x10\x10\x00\x00\x01\x00\x08\x00h\x05\x00\x00'
-			b'\x16\x00\x00\x00(\x00\x00\x00\x10\x00\x00\x00 \x00\x00\x00\x01\x00'
-			b'\x08\x00\x00\x00\x00\x00@\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-			'\x00\x01\x00\x00\x00\x01') + b'\x00'*1282 + b'\xff'*64
+	ICON = zlib.decompress(base64.b64decode('eJxjYGAEQgEBBiDJwZDBy'
+	'sAgxsDAoAHEQCEGBQaIOAg4sDIgACMUj4JRMApGwQgF/ykEAFXxQRc='))
 
 	_, ICON_PATH = mkstemp()
 	with open(ICON_PATH, 'wb') as icon_file:
@@ -128,7 +136,7 @@ def main():
 	password = StringVar()
 	Entry(userinfo, textvariable=password, show='*').grid(column=1, row=1, sticky=(N, S, E, W)) 
 	Label(userinfo, text="Org").grid(column=0, row=2, sticky=(W))
-	org = dd.DropDownBox(userinfo, myorgs, 1, 2)
+	org = DropDownBox(userinfo, myorgs, 1, 2)
 	fileBtn = Button(userinfo, text="Save Temp Files At", command= lambda: folderSaveTo(fileBtn, root))
 	fileBtn.grid(column=1, row=3, sticky=(W))	
 	
@@ -180,7 +188,7 @@ def main():
 	button['Done'].grid(column=2, row=4, pady=2, padx=3)  
 	
 	color = MORECOLOR()
-	helv36 = tkFont.Font(family='Helvetica', size=12, weight='bold')
+	helv36 = font.Font(family='Helvetica', size=12, weight='bold')
 	runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button['locations'], fileBtn["text"]))
 	runbtn['font'] = helv36
 	runbtn.grid(column=0, row=0, pady=2, columnspan = 3)   

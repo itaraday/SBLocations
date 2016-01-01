@@ -29,8 +29,8 @@ class SBTax():
     def WTHDoIDO(self, loc):
         startBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number Start")
         endBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number end")
-        print "YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE!!!!"
-        print "Charity wants the range: {} to {}".format(startBlock, endBlock)
+        print("YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE!!!!")
+        print("Charity wants the range: {} to {}".format(startBlock, endBlock))
         time.sleep(60)           
         
     def setupTR(self):
@@ -141,14 +141,14 @@ class SBTax():
                 
                 #check if need images
                 if newTR:
-                    print "YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR NEW CHARTITY: {}".format(loc)
-                    print "do NOT click submit"
+                    print("YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR NEW CHARTITY: {}".format(loc))
+                    print("do NOT click submit")
                     time.sleep(60)                                        
                 if self.crawler.getAttributeOne(loc, "newImage") or self.crawler.getAttributeOne(loc, "newSig"):
-                    print "YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR CHARTITY: {}".format(loc)
-                    print "New Image: {}".format(self.crawler.getAttributeOne(loc, "newImage"))
-                    print "New Sig: {}".format(self.crawler.getAttributeOne(loc, "newSig"))
-                    print "do NOT click submit"
+                    print("YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR CHARTITY: {}".format(loc))
+                    print("New Image: {}".format(self.crawler.getAttributeOne(loc, "newImage")))
+                    print("New Sig: {}".format(self.crawler.getAttributeOne(loc, "newSig")))
+                    print("do NOT click submit")
                     time.sleep(60)    
                 self.crawler.pageLoad("id","buttonSubmit")
                 self.goToTaxReceipting()
