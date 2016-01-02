@@ -127,7 +127,7 @@ class crawler:
 		try:
 			urllib.urlretrieve(src, saveas)
 		except:
-			urllib.request.urlretrieve
+			urllib.request.urlretrieve(src, saveas)
 		
 	def getOldNames(self, table, eq, myName = "Charity's Name"):
 		self.maindata.resetOld()
