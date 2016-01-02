@@ -103,7 +103,7 @@ def main():
 	root = Tk()
 	filePath = filedialog.askopenfilename(parent=root,title='Choose a file',filetypes=[('CSV files', '.csv')])
 	if not len(filePath):
-		tkMessageBox.showerror(
+		messagebox.showerror(
 			"KA-BOOM",
 			"Well if you're not going to enter a file I QUIT"
 		)
