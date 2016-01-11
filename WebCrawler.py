@@ -247,19 +247,23 @@ class crawler:
 		self.inputData("id", "textUsername", username)
 		self.inputData("id", "textPassword", password)
 		self.browser.find_element_by_id('buttonSubmit').click()
+		print("You are now logged in =)")
 		
 	def setupLocations(self):	 
 		self.SBLocations.setupLocations(self.event)
+		print("Locations SUCCESSFULLY setup")
 					
 	def execute_script(self, script):
 		self.browser.execute_script(script)
 		
 	def setupAdmin(self):
 		self.SBAdmin.setupAdmin(self.event)
+		print("Admins setup")
 	
 	def setupTR(self):
 		self.SBTax.setupTR()
 		self.SBLocations.enableTR(self.event)
+		print("Release the tax receipts!")
 		
 	def setupPages(self):
 		self.SBLocations.getLocURL(self.event)
@@ -268,14 +272,18 @@ class crawler:
 		self.getIDs()
 		self.SBLocations.finishDesc(self.event)
 		self.SBPages.setCharityUDF(self.event)
+		print("Frontend now visible")
 	
 	def setupPledge(self):
 		self.SBLocations.goToEvent(self.event)
 		self.SBPledge.setupPledge()
+		print("Pledges ready to be downloaded")
 		
 	def setupEmail(self):
 		self.SBLocations.goToEvent(self.event)
 		self.SBEmail.setupEmail()
+		print("Emails can now be sent")
 	
 	def Done(self):
+		print("Thank you come again")
 		self.maindata.done(self.username)
