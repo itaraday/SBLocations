@@ -2,15 +2,26 @@ import pandas as pd
 import time
 import string
 import re
+
 def getOptions():
 	return {'newImage': 'new image',
 			'newSig': 'New Sig',
 			'French': 'French'}
+
+def removecurrency(data, remcur):
+    for col in remcur:
+        try:
+            data[col] = data[col].str.replace("[^\d\.]","").astype(float)
+        except:
+            ids = data["Event ID"].unique().tolist()
+            #print "\n----- Currency problem in {}: {}".format(ids, col)
+    return data
 	
 class dataset: 
 	def __init__(self, filePath):
 		self.filePath = filePath
 		self.df = pd.read_csv(filePath, encoding='mbcs')
+		self.df = self.df[self.df["Ignore"].isnull()] 
 		self.df.loc[self.df["Charity's Name"].isnull(), "Charity's Name"] = self.df["Charity's Legal Name"]
 		self.df.loc[self.df["Description Personal"].isnull(), "Description Personal"] = self.df["description"]
 		self.df["old name"] = self.df["Charity's Name"]
@@ -21,6 +32,8 @@ class dataset:
 		self.df['new'] = False
 		self.df["city"] = self.df["city"].str.title()
 		self.df["province"] = self.df["province"].str.title()
+		remcur = ["goal", "Minimum donation amount to issue tax receipt"]
+		self.df = removecurrency(self.df, remcur)
 		provconvert = {
 				"Ab": "Alberta",
 				"Mb": "Manitoba",
