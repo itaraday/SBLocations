@@ -63,7 +63,13 @@ class SBPages():
 		self.crawler.select("id", "CAProvince", self.crawler.getAttributeOne(loc, "province"))
 		self.crawler.inputData( "id", "PostalCode", self.crawler.getAttributeOne(loc, "postal code"))
 		self.crawler.inputData("id", "EmailAddress", "scotiabankgroupcharitychallenge@artez.com")
-		self.crawler.inputData("id", "EmailAddressConfirm", "scotiabankgroupcharitychallenge@artez.com")	 
+		self.crawler.inputData("id", "EmailAddressConfirm", "scotiabankgroupcharitychallenge@artez.com")
+		try:
+			self.crawler.inputData("id", "AreaCode", "555")
+			self.crawler.inputData("id", "PhoneNumber", "5555555")
+		except:
+			pass
+		
 		if newUser:
 			self.crawler.inputData("id", "LoginName", username)
 			self.crawler.inputData("id", "Password", username)
