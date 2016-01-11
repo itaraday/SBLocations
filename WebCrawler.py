@@ -20,7 +20,11 @@ from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
-from urllib.parse import urlparse, parse_qs
+try:
+    from urllib.parse import urlparse, parse_qs
+except:
+    from urlparse import urlparse, parse_qs
+    
     
 @contextmanager
 def wait_for_page_load(self, timeout=60):

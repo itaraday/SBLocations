@@ -9,13 +9,12 @@ def getOptions():
 			'French': 'French'}
 
 def removecurrency(data, remcur):
-    for col in remcur:
-        try:
-            data[col] = data[col].str.replace("[^\d\.]","").astype(int)
-        except:
-            ids = data["Event ID"].unique().tolist()
-            #print "\n----- Currency problem in {}: {}".format(ids, col)
-    return data
+	for col in remcur:
+		try:
+			data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].str.replace("[^\d\.]","").astype(int)
+		except:
+			data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(int)
+	return data
 	
 class dataset: 
 	def __init__(self, filePath):
@@ -32,7 +31,7 @@ class dataset:
 		self.df['new'] = False
 		self.df["city"] = self.df["city"].str.title()
 		self.df["province"] = self.df["province"].str.title()
-		remcur = ["goal", "Minimum donation amount to issue tax receipt"]
+		remcur = ["goal", "Minimum donation amount to issue tax receipt", "Tax Receipt Number Start", "Tax Receipt Number end"]
 		self.df = removecurrency(self.df, remcur)
 		provconvert = {
 				"Ab": "Alberta",

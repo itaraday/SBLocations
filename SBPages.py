@@ -87,8 +87,8 @@ class SBPages():
 		personalPageURL = self.crawler.getElemAttribute("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_ucPerformanceParticipant_textboxPersonalPageLink", 'value')
 		self.crawler.setAttribute(loc, "Personal Page", personalPageURL)
 		self.crawler.writeInIFrame("xpath", '//div[@id="cke_1_contents"]/iframe', 'tag', 'body', self.crawler.getAttributeOne(loc, "Description Personal"))
-		print("please don't leave this page! You have 30secs to add image for {}".format(loc))
-		time.sleep(30)	 
+		print("please don't leave this page! You have 1min to add image for {}".format(loc))
+		time.sleep(60)	 
 		self.crawler.pageClick("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_ucPersonalization_buttonSavePersonalization")
 		self.crawler.goToUrl(personalPageURL)
 		

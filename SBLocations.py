@@ -34,7 +34,7 @@ class SBLocations():
 			self.crawler.pageLoad("text", self.crawler.getAttributeOne(loc, "old name")) 		
 			self.crawler.pageLoad("id", "hyperlinkEditInfo")
 			myurl = self.crawler.getAttributeOne(loc, "Donation Page")
-			message = '\n\nTo make a direct donation to '+loc+' please <a href="'+myurl+'">visit our donation page</a>.\nThank you!'
+			message = '\n\nTo make a direct donation to '+loc+' please <a href="'+myurl+'">visit our donation page</a>. Thank you!'
 			self.crawler.inputData("id", "ucEventLocationContent_textboxLocationLongDescription1", message, False)
 			self.crawler.pageLoad("id", "buttonSubmit")
 			self.goToLocations(event, "buttonShowAll")
