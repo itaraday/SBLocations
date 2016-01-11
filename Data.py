@@ -11,7 +11,7 @@ def getOptions():
 def removecurrency(data, remcur):
     for col in remcur:
         try:
-            data[col] = data[col].str.replace("[^\d\.]","").astype(float)
+            data[col] = data[col].str.replace("[^\d\.]","").astype(int)
         except:
             ids = data["Event ID"].unique().tolist()
             #print "\n----- Currency problem in {}: {}".format(ids, col)

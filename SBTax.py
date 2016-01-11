@@ -29,7 +29,7 @@ class SBTax():
     def WTHDoIDO(self, loc):
         startBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number Start")
         endBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number end")
-        print("YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE!!!!")
+        print("YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE for {}!!!!".format(loc))
         print("Charity wants the range: {} to {}".format(startBlock, endBlock))
         time.sleep(60)           
         

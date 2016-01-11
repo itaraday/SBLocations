@@ -73,11 +73,12 @@ class SBLocations():
 			except:
 				pass					
 			
+			print("Please select new image for: {}".fomat(loc))
 			self.crawler.pageClick("id","ucEventLocationContent_ucImageLoader_fileUpload")				 
 			try:
 				self.crawler.Ewait(60, "xpath", '//div[@id="divPreviewThubnail"]/img')
 			except:
-				print("Took too long to select an image for: {}".fomat(loc))
+				pass
 		self.crawler.inputData("id", 'ucEventLocationContent_textboxLocationLongDescription1', self.crawler.getAttributeOne(loc, "description"))
 		
 	def LoctionDetails(self, loc):

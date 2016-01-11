@@ -78,13 +78,16 @@ class SBPages():
 		
 		self.crawler.pageLoad("id", "registerNoPay2")
 		self.crawler.setAttribute(loc, "canLogin", True)
-		
+		if newUser:
+			self.crawler.setAttribute(loc, "Direct Donation Admin Username", username)
+			self.crawler.setAttribute(loc, "Direct Donation Admin Password", username)
+			
 	def FundraisingHub(self, loc):
 		self.crawler.pageLoad("xpath", '//div[@id="ctl00_ctl00_mainContent_fundraisingNavContainer"]/a')
 		personalPageURL = self.crawler.getElemAttribute("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_ucPerformanceParticipant_textboxPersonalPageLink", 'value')
 		self.crawler.setAttribute(loc, "Personal Page", personalPageURL)
 		self.crawler.writeInIFrame("xpath", '//div[@id="cke_1_contents"]/iframe', 'tag', 'body', self.crawler.getAttributeOne(loc, "Description Personal"))
-		print("You have 30secs to add image saved, please don't leave this page")
+		print("please don't leave this page! You have 30secs to add image for {}".format(loc))
 		time.sleep(30)	 
 		self.crawler.pageClick("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_ucPersonalization_buttonSavePersonalization")
 		self.crawler.goToUrl(personalPageURL)
