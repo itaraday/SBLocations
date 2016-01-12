@@ -188,14 +188,21 @@ class crawler:
 		if mytype == 'xpath':
 			return self.browser.find_element_by_xpath(element).text
 		
+	def clickCheckBox(self, check, mytype = None, element = None, box = None):
+		if mytype == 'id':
+			box = self.browser.find_element_by_id(element)
+		if (box.get_attribute("checked") != check) and (box.is_displayed()):
+			box.click()
+	
 	def clickCheckboxes(self, mytype, element, check):
 		if mytype == 'xpath':
 			checkboxes = self.browser.find_elements_by_xpath(element)
 		#go through all checkboxes on the page and make sure clicked or unclicked
 		#check = NONE to unclick them 
 		for box in checkboxes:
-			if (box.get_attribute("checked") != check) and (box.is_displayed()):
-				box.click()
+			self.clickCheckBox(check, box = box)
+			#if (box.get_attribute("checked") != check) and (box.is_displayed()):
+			#	box.click()
 	
 	def goToUrl(self, url):
 		self.browser.get(url)

@@ -75,7 +75,7 @@ class SBTax():
 					length = 4
 				self.crawler.inputData("id", 'textLength', length)
 				if self.crawler.getAttributeOne(loc, "Leading 0"):
-					self.crawler.pageClick("id", "checkLeadingZeros")
+					self.crawler.clickCheckbox('true', "id", 'checkLeadingZeros')
 				self.crawler.pageLoad("id","buttonSubmit")
 				
 				#tax receipt blocks
