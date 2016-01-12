@@ -16,16 +16,17 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.expected_conditions import staleness_of
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
 try:
-    from urllib.parse import urlparse, parse_qs
+	from urllib.parse import urlparse, parse_qs
 except:
-    from urlparse import urlparse, parse_qs
-    
-    
+	from urlparse import urlparse, parse_qs
+	
+	
 @contextmanager
 def wait_for_page_load(self, timeout=60):
 	old_page = self.find_element_by_tag_name('html')
@@ -37,7 +38,6 @@ def wait_for_page_load(self, timeout=60):
 		
 class crawler:	  
 	def __init__(self):
-		self.browser = webdriver.Firefox()
 		self.SBLocations = SBLocations(self)
 		self.SBAdmin = SBAdmin(self)
 		self.SBTax = SBTax(self)
@@ -124,7 +124,6 @@ class crawler:
 			values.append([low, high, status])
 		return values
 		
-	
 	def stealImage(self, mytype, element, name):
 		src = self.getElemAttribute(mytype, element, 'src')
 		saveas = self.filepath + "/" + name
@@ -142,7 +141,7 @@ class crawler:
 			locations.append(row.find_all('td')[eq].get_text())
 		for loc in self.maindata.getLocations():
 			myname = self.getAttributeOne(loc, myName)
-			oldratio = 70
+			oldratio = 60
 			ratio = 0
 			myloc = ""
 			for removedloc in locations:
@@ -236,6 +235,12 @@ class crawler:
 		
 	#SBLocation main functions
 	def setup(self, maindata, username, password, org, filepath):
+		profile = FirefoxProfile()
+		profile.set_preference("browser.download.panel.shown", False)
+		profile.set_preference("browser.helperApps.neverAsk.saveToDisk", 'application/pdf')
+		profile.set_preference("browser.download.folderList", 2);
+		profile.set_preference("browser.download.dir", filepath + "/")
+		self.browser = webdriver.Firefox(firefox_profile=profile)
 		self.maindata = maindata
 		self.event = self.eventData[org]
 		self.filepath = filepath

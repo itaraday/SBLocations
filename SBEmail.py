@@ -29,7 +29,7 @@ class SBEmail():
 			self.crawler.selectLast("id", "ddlTaxReceiptTemplate")
 		self.crawler.Ewait(10, "id", "showAdvancedOptions")
 		self.crawler.pageClick("id", "showAdvancedOptions")
-		self.crawler.Ewait(10, "id", "txtSenderName")
+		self.crawler.Ewait(30, "id", "txtSenderName") #something wrong here with last duplicate email
 		self.crawler.inputData("id", "txtSenderName", sendername)
 		self.crawler.inputData("id", "txtReplyToEmailAddress", adminEmail)
 		self.crawler.pageLoad("id", "buttonSave")

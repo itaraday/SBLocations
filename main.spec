@@ -3,8 +3,8 @@
 block_cipher = None
 
 needed_selenium_files = [
-                        ('C:/Users/itaraday/Anaconda3/envs/py2.7/Lib/site-packages/selenium/webdriver/firefox/webdriver_prefs.json','DATA'),
-                        ('C:/Users/itaraday/Anaconda3/envs/py2.7/Lib/site-packages/selenium/webdriver/firefox/webdriver.xpi', 'DATA')
+                        ('C:/Anaconda/Lib/site-packages/selenium/webdriver/firefox/webdriver_prefs.json','DATA'),
+                        ('C:/Anaconda/Lib/site-packages/selenium/webdriver/firefox/webdriver.xpi', 'DATA')
                         ]
                            
 a = Analysis(['main.py'],

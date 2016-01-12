@@ -73,7 +73,7 @@ class SBLocations():
 			except:
 				pass					
 			
-			print("Please select new image for: {}".fomat(loc))
+			print("Please select new image for: {}".format(loc))
 			self.crawler.pageClick("id","ucEventLocationContent_ucImageLoader_fileUpload")				 
 			try:
 				self.crawler.Ewait(60, "xpath", '//div[@id="divPreviewThubnail"]/img')
@@ -124,7 +124,8 @@ class SBLocations():
 				self.crawler.setAttribute(loc, 'new', True)
 				needreload = False
 			else:
-				self.crawler.pageLoad("id","linkbuttonActivateLocation" )
+				self.crawler.pageLoad("id","linkbuttonActivateLocation")
+				self.crawler.setAttribute(loc, 'new', False)
 				needreload = True
 			   
 		#enter new locations	
