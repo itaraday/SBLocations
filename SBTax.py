@@ -17,8 +17,8 @@ class SBTax():
 	
 	def filOutBlocks(self, startBlock, endBlock):
 		self.crawler.pageClick("id", "linkBlockCreate")
-		self.crawler.inputData("id", 'textStarting', startBlock)
-		self.crawler.inputData("id", 'textEnding', endBlock)
+		self.crawler.inputData("id", 'textStarting', int(startBlock))
+		self.crawler.inputData("id", 'textEnding', int(endBlock))
 		self.crawler.pageClick("id", "buttonSubmit")
 	
 	def extendBlock(self, endBlock):
@@ -29,9 +29,9 @@ class SBTax():
 	def WTHDoIDO(self, loc):
 		startBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number Start")
 		endBlock = self.crawler.getAttributeOne(loc, "Tax Receipt Number end")
-		print("YOU HAVE 1 MIN TO MANUALLY SETUP THE TAX RECEIPT BLOCK AND GET BACK TO THIS PAGE for {}!!!!".format(loc))
 		print("Charity wants the range: {} to {}".format(startBlock, endBlock))
-		time.sleep(60)			 
+		#time.sleep(60)			 
+		self.crawler.waitForUser()
 		
 	def setupTR(self):
 		self.goToTaxReceipting()
@@ -142,15 +142,17 @@ class SBTax():
 				
 				#check if need images
 				if newTR:
-					print("YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR NEW CHARTITY: {}".format(loc))
-					print("do NOT click submit")
-					time.sleep(60)										  
+					print("Please setup the image and signature for new charity: {}".format(loc))
+					#time.sleep(60)		
+					self.crawler.waitForUser()					
 				if self.crawler.getAttributeOne(loc, "newImage") or self.crawler.getAttributeOne(loc, "newSig"):
-					print("YOU HAVE 1 MIN TO MANUALLY SETUP THE IMAGE AND SIGNATURE FOR CHARTITY: {}".format(loc))
-					print("New Image: {}".format(self.crawler.getAttributeOne(loc, "newImage")))
-					print("New Sig: {}".format(self.crawler.getAttributeOne(loc, "newSig")))
-					print("do NOT click submit")
-					time.sleep(60)	  
+					print("charity: {} New Image: {} New Signature: {}".format(
+																				loc, 
+																				self.crawler.getAttributeOne(loc, "newImage"),
+																				self.crawler.getAttributeOne(loc, "newSig")
+																		))
+					#time.sleep(60)	  
+					self.crawler.waitForUser()
 				self.crawler.pageLoad("id","buttonSubmit")
 				self.crawler.pageClick("xpath", '//table[@id="datagridTemplates"]//tr[last()]//a')
 				self.crawler.Ewait(10, "id", "linkbuttonPreview")

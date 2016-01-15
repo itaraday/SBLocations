@@ -21,6 +21,9 @@ from fuzzywuzzy import fuzz
 from bs4 import BeautifulSoup
 import json
 import urllib
+import string
+import random
+
 try:
 	from urllib.parse import urlparse, parse_qs
 except:
@@ -71,6 +74,17 @@ class crawler:
 			elem = self.browser.find_element_by_name(element)	
 		elem.clear()	
 		
+	def waitForUser(self):
+		randomLetter = random.choice(string.ascii_lowercase)
+		print("Press {} and enter when ready! Please don't leave the page you're on!".format(randomLetter))
+		myVal = "1"
+		while (myVal != randomLetter) and (myVal):
+			try:
+				myVal = raw_input()
+			except:
+				myVal = input()
+		
+	
 	def wait(self, amount):
 		self.browser.implicitly_wait(amount)
 		
@@ -141,7 +155,7 @@ class crawler:
 			locations.append(row.find_all('td')[eq].get_text())
 		for loc in self.maindata.getLocations():
 			myname = self.getAttributeOne(loc, myName)
-			oldratio = 60
+			oldratio = 75
 			ratio = 0
 			myloc = ""
 			for removedloc in locations:
@@ -260,6 +274,7 @@ class crawler:
 		self.inputData("id", "textPassword", password)
 		self.browser.find_element_by_id('buttonSubmit').click()
 		print("You are now logged in =)")
+		
 		
 	def setupLocations(self):	 
 		self.SBLocations.setupLocations(self.event)

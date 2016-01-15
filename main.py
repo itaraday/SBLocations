@@ -29,7 +29,10 @@ def ask_quit(root, crawler, filePath, maindata):
 	if messagebox.askokcancel("Quit", "You want to quit now? *sniff*"):
 		print("Saving: {}".format(filePath))
 		maindata.save(filePath)
-		crawler.quit()
+		try:
+			crawler.quit()
+		except:
+			pass
 		root.destroy()
 
 def MORECOLOR():
@@ -46,7 +49,7 @@ def MORECOLOR():
 	colorfg = "#"+code.translate(table)
 	return ([colorbg, colorfg])	   
 	
-def begin(maindata, crawler, checkboxes, username, password, org, locationBtn, filepath):
+def begin(maindata, crawler, checkboxes, username, password, org, button, filepath):
 	good = True
 	if (org == "Please select an Org") or (not username) or (not password) or (filepath == "Save Temp Files At"):
 		good = False
@@ -64,7 +67,8 @@ def begin(maindata, crawler, checkboxes, username, password, org, locationBtn, f
 			error
 		)
 	if good:
-		locationBtn.config(state="normal")
+		for key in button:
+			button[key].config(state="normal")
 		for box in checkboxes:
 			if checkboxes[box].ischeck():
 				val = box.split('**')
@@ -196,12 +200,12 @@ def main():
 	button['Done']['font'] = helv36
 	
 	color = MORECOLOR()
-	runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button['locations'], fileBtn["text"]))
+	runbtn = Button(control, background=color[0], fg=color[1], text="And we're off", command= lambda: begin(maindata, crawler, checkboxes, username.get(), password.get(), org.getSelecton(), button, fileBtn["text"]))
 	runbtn['font'] = helv36
 	runbtn.grid(column=0, row=0, pady=2, columnspan = 3)   
 	
-	for key in button:
-		button[key].config(state="normal")
+	#for key in button:
+	#	button[key].config(state="normal")
 			   
 	root.mainloop()
 	

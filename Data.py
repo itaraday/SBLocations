@@ -15,12 +15,27 @@ def removecurrency(data, remcur):
 		except:
 			data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(int)
 	return data
+
+def removeWhiteSpace(data, remws):
+	for col in remws:
+		try:
+			data[col] = data[col].str.strip()
+		except:
+			pass
+	return data
+	
+def makeTitle(data, titlecol):
+	for col in titlecol:
+		try:
+			data[col] = data[col].str.title()
+		except:
+			pass
+	return data
 	
 class dataset: 
 	def __init__(self, filePath):
 		self.filePath = filePath
 		self.df = pd.read_csv(filePath, encoding='mbcs')
-		self.df = self.df[self.df["Ignore"].isnull()] 
 		self.df.loc[self.df["Charity's Name"].isnull(), "Charity's Name"] = self.df["Charity's Legal Name"]
 		self.df.loc[self.df["Description Personal"].isnull(), "Description Personal"] = self.df["description"]
 		self.df["old name"] = self.df["Charity's Name"]
@@ -29,10 +44,13 @@ class dataset:
 		self.df['newSig'] = False
 		self.df['French'] = False
 		self.df['new'] = False
-		self.df["city"] = self.df["city"].str.title()
-		self.df["province"] = self.df["province"].str.title()
+		
 		remcur = ["goal", "Minimum donation amount to issue tax receipt", "Tax Receipt Number Start", "Tax Receipt Number end"]
+		titlecol = ["city", "province"]
 		self.df = removecurrency(self.df, remcur)
+		self.df = removeWhiteSpace(self.df, self.df.columns.tolist())
+		self.df = makeTitle(self.df, titlecol)
+		
 		provconvert = {
 				"Ab": "Alberta",
 				"Mb": "Manitoba",
@@ -54,12 +72,13 @@ class dataset:
 		self.df.to_csv(filepath, encoding='mbcs', index=False) 
 		
 	def getLocations(self, returningStatus="all", myName = "Charity's Name"):
+		df = self.df[(self.df["Charity added by"].isnull()) & (self.df["Ignore"].isnull())]
 		if returningStatus == "new":
-			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == True), myName] 
+			return df.loc[df["new"] == True, myName] 
 		elif returningStatus == "returning":
-			return self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["new"] == False), myName] 
+			return df.loc[df["new"] == False, myName] 
 		else:
-			return self.df.loc[self.df["Charity added by"].isnull(), myName]
+			return df[myName] 
 	
 	#if charity name is one word the name is prefix_charity
 	#if charity name is mulitple words take first character from each word 
