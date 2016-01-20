@@ -92,6 +92,7 @@ class SBPages():
 		self.crawler.pageLoad("xpath", '//div[@id="ctl00_ctl00_mainContent_fundraisingNavContainer"]/a')
 		personalPageURL = self.crawler.getElemAttribute("id", "ctl00_ctl00_mainContent_bodyContentPlaceHolder_ucPerformanceParticipant_textboxPersonalPageLink", 'value')
 		self.crawler.setAttribute(loc, "Personal Page", personalPageURL)
+		time.sleep(3)
 		self.crawler.writeInIFrame("xpath", '//div[@id="cke_1_contents"]/iframe', 'tag', 'body', self.crawler.getAttributeOne(loc, "Description Personal"))
 		print("Please add images for {}".format(loc))
 		##time.sleep(60)

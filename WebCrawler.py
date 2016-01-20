@@ -61,8 +61,10 @@ class crawler:
 			elem = self.browser.find_element_by_name(element)
 		elif mytype == "tag":
 			elem = self.browser.find_element_by_tag_name(element)
+		elif mytype == 'xpath':
+			elem = self.browser.find_element_by_xpath(element)
 		else:
-			return			
+			raise ValueError('Unknown type {}'.format(mytype))		
 		if clear:
 			elem.clear()   
 		elem.send_keys(text) 

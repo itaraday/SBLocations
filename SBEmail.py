@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import numpy as np
 import time
 
 class SBEmail():
@@ -17,19 +18,18 @@ class SBEmail():
 		try:
 			soup.find(text="%OrganizationName%").replaceWith('%LocationName%')
 		except:
-			pass		
-		try:
-			soup.find(text="%EventName%").replaceWith('the %EventName%')
-		except:
-			pass
+			soup.body.append(BeautifulSoup('<p>%LocationName%</p>', 'html.parser'))					
 		soup.body.hidden=True
-		self.crawler.inputData("xpath", '//div[@id="cke_1_contents"]/textarea', soup.body.prettify())
+		foo = soup.body.prettify()
+		print foo
+		self.crawler.inputData("xpath", '//div[@id="cke_1_contents"]/textarea', foo)
 		self.crawler.pageClick("id", "cke_33")
 		if needTR:
 			self.crawler.selectLast("id", "ddlTaxReceiptTemplate")
+		else:
+			time.sleep(3)
 		self.crawler.Ewait(20, "id", "showAdvancedOptions")
 		self.crawler.pageClick("id", "showAdvancedOptions")
-		time.sleep(3)
 		self.crawler.Ewait(20, "id", "txtSenderName") #something wrong here with last duplicate email
 		self.crawler.inputData("id", "txtSenderName", sendername)
 		self.crawler.inputData("id", "txtReplyToEmailAddress", adminEmail)
@@ -50,13 +50,15 @@ class SBEmail():
 			}
 		}
 		for loc in self.crawler.getLocations():
-			self.crawler.select("id", "dropdownlistLocationValue", loc)
-			for key in emails:		
-				if self.crawler.getAttributeOne(loc, key):
-					for email in emails[key]:
-						self.crawler.pageLoad("text", email)
-						self.fixEmail(loc, emails[key][email])
-						self.crawler.clickCheckboxes("xpath", '''//td[contains(text(), "'''+email+'''")]
-														/preceding-sibling::td[0]
-														//input[@type="checkbox"]''', 'true')
-			
+			if not self.crawler.getAttributeOne(loc, "emailSetup"):
+				self.crawler.select("id", "dropdownlistLocationValue", loc)
+				for key in emails:		
+					if self.crawler.getAttributeOne(loc, key):
+						for email in emails[key]:
+							self.crawler.pageLoad("text", email)
+							self.fixEmail(loc, emails[key][email])
+							self.crawler.clickCheckboxes("xpath", '''//a[contains(text(), "'''+email+'''")]
+															/..
+															/preceding-sibling::td
+															//input[@type="checkbox"]''', 'true')
+				self.crawler.setAttribute(loc, "emailSetup", True)

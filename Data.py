@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import time
 import string
 import re
@@ -10,26 +11,20 @@ def getOptions():
 
 def removecurrency(data, remcur):
 	for col in remcur:
-		try:
-			data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].str.replace("[^\d\.]","").astype(int)
-		except:
-			data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(int)
+		data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(str)
+		data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].str.replace("[^\d\.]","").astype(float)
+		data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(int)
+		#data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].astype(int)
 	return data
 
 def removeWhiteSpace(data, remws):
 	for col in remws:
-		try:
-			data[col] = data[col].str.strip()
-		except:
-			pass
+		data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].str.strip()
 	return data
 	
 def makeTitle(data, titlecol):
 	for col in titlecol:
-		try:
-			data[col] = data[col].str.title()
-		except:
-			pass
+		data.loc[data[col].notnull(), col] = data.loc[data[col].notnull(), col].str.title()
 	return data
 	
 class dataset: 
@@ -44,13 +39,14 @@ class dataset:
 		self.df['newSig'] = False
 		self.df['French'] = False
 		self.df['new'] = False
-		
+		if 'emilSetup' not in self.df.columns:
+			self.df['emailSetup'] = False
 		remcur = ["goal", "Minimum donation amount to issue tax receipt", "Tax Receipt Number Start", "Tax Receipt Number end"]
 		titlecol = ["city", "province"]
+		remws = ["Charity's Legal Name", "province", "Charity's Name", "Email Administrator", "First Name Administrator", "Last Name Administrator"]
 		self.df = removecurrency(self.df, remcur)
-		self.df = removeWhiteSpace(self.df, self.df.columns.tolist())
+		self.df = removeWhiteSpace(self.df, remws)
 		self.df = makeTitle(self.df, titlecol)
-		
 		provconvert = {
 				"Ab": "Alberta",
 				"Mb": "Manitoba",

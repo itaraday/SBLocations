@@ -42,7 +42,18 @@ class SBTax():
 				oldname = self.crawler.getAttributeOne(loc, "old name")
 				legalname = self.crawler.getAttributeOne(loc, "Charity's Legal Name")
 				found = self.crawler.fineElement("xpath", '//td[contains(text(),"'+oldname+'")]/following-sibling::td[2]//a')
-				#see if TR exists
+				#see if TR exists or user wants to overwitr
+				if not found:
+					oldname = "qwuiqhoiqhqopw"
+					while (not found) and (oldname):
+						print("Tax receipt for {} not found. press enter to make a new one or paste in the Receipt Bundle Name if it does exist".format(loc))
+						try:
+							oldname = raw_input()
+						except:
+							oldname = input()
+						if oldname:
+							found = self.crawler.fineElement("xpath", '//td[contains(text(),"'+oldname+'")]/following-sibling::td[2]//a')
+
 				newTR = False
 				if not found:
 					#setup TR, product bug when needing to make new TR it gives an error
@@ -54,8 +65,7 @@ class SBTax():
 					self.crawler.setAttribute(loc, "old name", oldname)
 					self.crawler.pageLoad("id","buttonSubmit")
 					self.goToTaxReceipting()
-				
-				
+					
 				#tax receipt settings
 				self.crawler.pageLoad("xpath", '//td[contains(text(),"'+oldname+'")]/following-sibling::td[2]//a')
 				self.crawler.pageLoad("id","hyperlinkEditInformation")
@@ -75,7 +85,7 @@ class SBTax():
 					length = 4
 				self.crawler.inputData("id", 'textLength', length)
 				if self.crawler.getAttributeOne(loc, "Leading 0"):
-					self.crawler.clickCheckbox('true', "id", 'checkLeadingZeros')
+					self.crawler.clickCheckBox('true', "id", 'checkLeadingZeros')
 				self.crawler.pageLoad("id","buttonSubmit")
 				
 				#tax receipt blocks
@@ -113,7 +123,7 @@ class SBTax():
 					elif endBlock >= oldBlocks[0][1]:
 						self.extendBlock(endBlock)
 					#check if need to make a new block before the intersection
-					elif (endBlock >= oldBlocks[0][0]) and (endBlock <= oldBlocks[0][1]):
+					elif (endBlock > oldBlocks[0][0]) and (endBlock < oldBlocks[0][1]):
 						self.filOutBlocks(startBlock, oldBlocks[0][0])
 					else:
 						self.WTHDoIDO(loc)
