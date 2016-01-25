@@ -49,6 +49,7 @@ class dataset:
 		self.df = makeTitle(self.df, titlecol)
 		provconvert = {
 				"Ab": "Alberta",
+				"Bc": "British Columbia",
 				"Mb": "Manitoba",
 				"Nb": "New Brunswick",
 				"Nl": "Newfoundland and Labrador",
@@ -104,4 +105,4 @@ class dataset:
 	
 	def done(self, username):
 		username = username[1:] + " " + time.strftime("%Y/%m/%d") 
-		self.df.loc[self.df["Charity added by"].isnull(), "Charity added by"] = username
+		self.df.loc[(self.df["Charity added by"].isnull()) & (self.df["Ignore"].isnull()), "Charity added by"] = username

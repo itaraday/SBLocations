@@ -18,10 +18,12 @@ class SBEmail():
 		try:
 			soup.find(text="%OrganizationName%").replaceWith('%LocationName%')
 		except:
-			soup.body.append(BeautifulSoup('<p>%LocationName%</p>', 'html.parser'))					
+			try:
+				soup.find(text="%LocationName%")
+			except:
+				soup.body.append(BeautifulSoup('<p>%LocationName%</p>', 'html.parser'))					
 		soup.body.hidden=True
 		foo = soup.body.prettify()
-		print foo
 		self.crawler.inputData("xpath", '//div[@id="cke_1_contents"]/textarea', foo)
 		self.crawler.pageClick("id", "cke_33")
 		if needTR:
