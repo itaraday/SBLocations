@@ -1,5 +1,6 @@
 #from WebCrawler import crawler
 import pandas as pd
+import numpy as np
 import time
 
 class SBTax():
@@ -86,6 +87,10 @@ class SBTax():
 				self.crawler.inputData("id", 'textLength', length)
 				if self.crawler.getAttributeOne(loc, "Leading 0"):
 					self.crawler.clickCheckBox('true', "id", 'checkLeadingZeros')
+				minAmount = self.crawler.getAttributeOne(loc, "Minimum donation amount to issue tax receipt")
+				if (minAmount == 0): 
+					minAmount = ""
+				self.crawler.inputData("id", 'textMinimumDonationAmount',minAmount)
 				self.crawler.pageLoad("id","buttonSubmit")
 				
 				#tax receipt blocks

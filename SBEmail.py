@@ -19,7 +19,7 @@ class SBEmail():
 			soup.find(text="%OrganizationName%").replaceWith('%LocationName%')
 		except:
 			try:
-				soup.find(text="%LocationName%")
+				soup.find(text="%LocationName%").replaceWith('%LocationName%')
 			except:
 				soup.body.append(BeautifulSoup('<p>%LocationName%</p>', 'html.parser'))					
 		soup.body.hidden=True

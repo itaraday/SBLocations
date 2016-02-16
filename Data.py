@@ -44,6 +44,7 @@ class dataset:
 		remcur = ["goal", "Minimum donation amount to issue tax receipt", "Tax Receipt Number Start", "Tax Receipt Number end"]
 		titlecol = ["city", "province"]
 		remws = ["Charity's Legal Name", "province", "Charity's Name", "Email Administrator", "First Name Administrator", "Last Name Administrator"]
+		self.df["Minimum donation amount to issue tax receipt"].fillna(0, inplace=True)
 		self.df = removecurrency(self.df, remcur)
 		self.df = removeWhiteSpace(self.df, remws)
 		self.df = makeTitle(self.df, titlecol)
